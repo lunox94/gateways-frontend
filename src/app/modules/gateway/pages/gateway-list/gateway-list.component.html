@@ -1,7 +1,13 @@
 <div>
     <h2 nz-typography>Gateways</h2>
 
-    <nz-divider></nz-divider>
+    <!-- Actions -->
+    <a nz-button nzType="text" nzSize="large">
+        <i nz-icon nzType="plus" class="text-blue-500"></i>
+        Create
+    </a>
 
-    <app-gateway-table></app-gateway-table>
+    <nz-divider class="mt-0"></nz-divider>
+
+    <app-gateway-table [gatewayList]="sampleData"></app-gateway-table>
 </div>
