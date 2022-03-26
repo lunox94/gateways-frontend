@@ -9,7 +9,20 @@ export class GatewayTableComponent implements OnInit {
     //** List of gateways to display in a table. */
     @Input() gatewayList: Gateway[] = [];
 
-    constructor() {}
+    //** Set of gateway ids to represent which row in the table is expanded */
+    expandSet: Set<string>;
+
+    constructor() {
+        this.expandSet = new Set<string>();
+    }
 
     ngOnInit(): void {}
+
+    onExpandChange(uid: string, checked: boolean): void {
+        if (checked) {
+            this.expandSet.add(uid);
+        } else {
+            this.expandSet.delete(uid);
+        }
+    }
 }
