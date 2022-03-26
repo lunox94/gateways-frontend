@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { GatewayListComponent } from './gateway-list.component';
 import { Route, RouterModule } from '@angular/router';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { GatewayComponentsModule } from '../../components/gateway-components/gateway-components.module';
 
 const gatewayListRoutes: Route[] = [
     {
@@ -12,6 +14,13 @@ const gatewayListRoutes: Route[] = [
 
 @NgModule({
     declarations: [GatewayListComponent],
-    imports: [CommonModule, RouterModule.forChild(gatewayListRoutes)],
+    imports: [
+        SharedModule,
+        RouterModule.forChild(gatewayListRoutes),
+        GatewayComponentsModule,
+
+        // NG-ZORRO imports
+        NzDividerModule,
+    ],
 })
 export class GatewayListModule {}
