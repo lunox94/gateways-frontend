@@ -6,19 +6,31 @@ import { Device, DeviceStatus } from 'src/app/core/models/models';
     templateUrl: './devices-status-cell.component.html',
 })
 export class DevicesStatusCellComponent implements OnInit {
+    //** List of devices */
     @Input() devices: Device[] = [];
 
-    online: Device[] = [];
-    offline: Device[] = [];
+    private _online: number = 0;
+
+    //** Amount of devices in online state */
+    public get online(): number {
+        return this._online;
+    }
+
+    private _offline: number = 0;
+
+    //** Amount of devices in offline state */
+    public get offline(): number {
+        return this._offline;
+    }
 
     constructor() {}
 
     ngOnInit(): void {
-        this.online = this.devices.filter(
+        this._online = this.devices.filter(
             (d) => d.status === DeviceStatus.Online
-        );
-        this.offline = this.devices.filter(
+        ).length;
+        this._offline = this.devices.filter(
             (d) => d.status === DeviceStatus.Offline
-        );
+        ).length;
     }
 }
