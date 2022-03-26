@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { GatewayTableComponent } from './gateway-table/gateway-table.component';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
     declarations: [GatewayTableComponent],
-    imports: [CommonModule],
+    imports: [SharedModule, NzTableModule],
     exports: [GatewayTableComponent],
 })
 export class GatewayComponentsModule {}

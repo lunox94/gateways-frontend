@@ -1,1 +1,19 @@
-<p>gateway-table works!</p>
+<nz-table #table [nzData]="gatewayList">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>IPv4</th>
+            <th>Devices</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let data of table.data">
+            <td>{{ data.name }}</td>
+            <td>{{ data.ipv4 }}</td>
+            <td>
+                <a>Delete</a>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
