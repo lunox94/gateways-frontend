@@ -1,0 +1,31 @@
+<h2 nz-typography>Gateway - {{ gateway?.name }}</h2>
+
+<nz-descriptions nzTitle="Info">
+    <nz-descriptions-item nzTitle="UID">{{
+        gateway?.uid
+    }}</nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Name">{{
+        gateway?.name
+    }}</nz-descriptions-item>
+    <nz-descriptions-item nzTitle="IPv4">{{
+        gateway?.ipv4
+    }}</nz-descriptions-item>
+</nz-descriptions>
+
+<!-- Devices section -->
+
+<div class="font-bold text-base mb-2">Devices</div>
+
+<!-- Device actions -->
+<a nz-button nzType="text" nzSize="large">
+    <i nz-icon nzType="plus" class="text-blue-500"></i>
+    Create
+</a>
+
+<nz-divider class="mt-0"></nz-divider>
+
+<app-device-table
+    [deviceList]="gateway?.devices ?? []"
+    [bordered]="false"
+    [hasTitle]="false"
+></app-device-table>

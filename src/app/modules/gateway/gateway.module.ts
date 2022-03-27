@@ -10,6 +10,13 @@ const gatewayRoutes: Route[] = [
                 (m) => m.GatewayListModule
             ),
     },
+    {
+        path: ':id',
+        loadChildren: () =>
+            import('./pages/gateway-details/gateway-details.module').then(
+                (m) => m.GatewayDetailsModule
+            ),
+    },
 ];
 
 @NgModule({

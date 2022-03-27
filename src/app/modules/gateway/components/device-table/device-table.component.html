@@ -3,8 +3,8 @@
     [nzData]="deviceList"
     [nzShowPagination]="false"
     nzSize="middle"
-    nzBordered
-    nzTitle="Devices"
+    [nzBordered]="bordered"
+    [nzTitle]="hasTitle ? 'Devices' : null"
 >
     <thead>
         <tr>

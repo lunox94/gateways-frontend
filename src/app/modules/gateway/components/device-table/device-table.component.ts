@@ -9,6 +9,12 @@ export class DeviceTableComponent implements OnInit {
     /** List of devices to display in a table. */
     @Input() deviceList: Device[] = [];
 
+    /** Whether or not the table should have borders. */
+    @Input() bordered = true;
+
+    /** Whether or not the table show its title. */
+    @Input() hasTitle = true;
+
     /** Possible device statuses. */
     readonly _statusEnum = DeviceStatus;
 

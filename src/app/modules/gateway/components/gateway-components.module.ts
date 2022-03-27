@@ -19,6 +19,6 @@ import { DeviceTableComponent } from './device-table/device-table.component';
         NzTableModule,
         NzBadgeModule,
     ],
-    exports: [GatewayTableComponent],
+    exports: [GatewayTableComponent, DeviceTableComponent],
 })
 export class GatewayComponentsModule {}
