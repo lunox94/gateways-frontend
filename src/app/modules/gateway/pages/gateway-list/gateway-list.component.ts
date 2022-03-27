@@ -13,6 +13,9 @@ export class GatewayListComponent implements OnInit {
         this.sampleData = this._getSampleData();
     }
 
+    /** Opens the drawer with the create gateway form. */
+    openCreateDrawer(): void {}
+
     private _getSampleData() {
         return [
             {

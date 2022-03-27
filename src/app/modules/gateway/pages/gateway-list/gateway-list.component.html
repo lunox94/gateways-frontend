@@ -2,7 +2,7 @@
     <h2 nz-typography>Gateways</h2>
 
     <!-- Actions -->
-    <a nz-button nzType="text" nzSize="large">
+    <a nz-button nzType="text" nzSize="large" (click)="openCreateDrawer()">
         <i nz-icon nzType="plus" class="text-blue-500"></i>
         Create
     </a>
@@ -10,4 +10,10 @@
     <nz-divider class="mt-0"></nz-divider>
 
     <app-gateway-table [gatewayList]="sampleData"></app-gateway-table>
+
+    <!-- Drawer -->
+    <app-drawer [visible]="true">
+        <p>CONTENT</p>
+        <p drawerFooter>FOOTER</p>
+    </app-drawer>
 </div>

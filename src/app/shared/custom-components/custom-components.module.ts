@@ -11,5 +11,6 @@ import { NzDrawerModule } from 'ng-zorro-antd/drawer';
         // NG-ZORRO imports
         NzDrawerModule,
     ],
+    exports: [DrawerComponent],
 })
 export class CustomComponentsModule {}

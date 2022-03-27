@@ -6,6 +6,7 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { GatewayComponentsModule } from '../../components/gateway-components.module';
+import { CustomComponentsModule } from 'src/app/shared/custom-components/custom-components.module';
 
 const gatewayListRoutes: Route[] = [
     {
@@ -20,6 +21,7 @@ const gatewayListRoutes: Route[] = [
         SharedModule,
         RouterModule.forChild(gatewayListRoutes),
         GatewayComponentsModule,
+        CustomComponentsModule,
 
         // NG-ZORRO imports
         NzDividerModule,
