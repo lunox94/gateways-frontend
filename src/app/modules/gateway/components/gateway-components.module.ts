@@ -5,6 +5,8 @@ import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { DevicesStatusCellComponent } from './devices-status-cell/devices-status-cell.component';
 import { DeviceTableComponent } from './device-table/device-table.component';
+import { RouterModule } from '@angular/router';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
 
 @NgModule({
     declarations: [
@@ -14,10 +16,12 @@ import { DeviceTableComponent } from './device-table/device-table.component';
     ],
     imports: [
         SharedModule,
+        RouterModule,
 
         // NG-ZORRO imports
         NzTableModule,
         NzBadgeModule,
+        NzDividerModule,
     ],
     exports: [GatewayTableComponent, DeviceTableComponent],
 })
