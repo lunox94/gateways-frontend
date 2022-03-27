@@ -1,0 +1,59 @@
+<form
+    nz-form
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+    class="flex flex-col h-full"
+>
+    <!-- Main content -->
+    <div class="flex-grow">
+        <div class="grid grid-cols-1 gap-2">
+            <!-- Gateway name field -->
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name"
+                    >Gateway name</nz-form-label
+                >
+                <nz-form-control
+                    [nzXs]="24"
+                    nzErrorTip="Gateway name can not be empty"
+                >
+                    <input
+                        nz-input
+                        formControlName="name"
+                        placeholder="Gateway name"
+                        id="name"
+                    />
+                </nz-form-control>
+            </nz-form-item>
+
+            <!-- IPv4 field -->
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="ipv4"
+                    >IPv4</nz-form-label
+                >
+                <nz-form-control [nzXs]="24" nzErrorTip="IPv4 can not be empty">
+                    <input
+                        nz-input
+                        formControlName="ipv4"
+                        placeholder="255.0.0.0"
+                        id="ipv4"
+                    />
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+    </div>
+
+    <nz-divider class="-mx-[24px] mb-[8px] w-auto"></nz-divider>
+
+    <!-- Footer -->
+    <div class="flex flex-row -mb-[16px] -ml-[16px]">
+        <button
+            nz-button
+            nzType="primary"
+            [nzLoading]="loading$ | async"
+            class="mr-2"
+        >
+            Submit
+        </button>
+        <button nz-button (click)="close()" type="button">Cancel</button>
+    </div>
+</form>
