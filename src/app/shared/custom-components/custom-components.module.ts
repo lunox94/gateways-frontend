@@ -5,6 +5,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzFormModule } from 'ng-zorro-antd/form';
+import { NgxMaskModule } from 'ngx-mask';
 
 @NgModule({
     declarations: [GatewayFormComponent],
@@ -16,6 +17,9 @@ import { NzFormModule } from 'ng-zorro-antd/form';
         NzDividerModule,
         NzInputModule,
         NzFormModule,
+
+        // 3rd party modules
+        NgxMaskModule.forChild(),
     ],
 })
 export class CustomComponentsModule {}
