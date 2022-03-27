@@ -56,7 +56,7 @@
         Devices ({{ (gateway?.devices)!.length }})
     </div>
     <!-- Device actions -->
-    <a nz-button nzType="text" nzSize="large">
+    <a nz-button nzType="text" nzSize="large" (click)="openCreateDeviceForm()">
         <i nz-icon nzType="plus" class="text-blue-500"></i>
         Create
     </a>

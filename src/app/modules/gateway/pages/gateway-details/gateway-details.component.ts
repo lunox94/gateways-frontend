@@ -43,6 +43,15 @@ export class GatewayDetailsComponent implements OnInit {
         );
     }
 
+    /**
+     * Opens a drawer with the form to create a device for the current
+     * gateway. */
+    openCreateDeviceForm(): void {
+        const ref = this._globalDrawerService.openCreateDeviceForm(
+            this.gateway!
+        );
+    }
+
     /** Called when the user confirms he wants to delete the current gateway. */
     confirmDelete(): void {
         this._router.navigate(['gateways']);

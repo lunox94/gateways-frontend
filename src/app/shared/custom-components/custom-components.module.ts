@@ -6,9 +6,10 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NgxMaskModule } from 'ngx-mask';
+import { DeviceFormComponent } from './device-form/device-form.component';
 
 @NgModule({
-    declarations: [GatewayFormComponent],
+    declarations: [GatewayFormComponent, DeviceFormComponent],
     imports: [
         SharedModule,
 
