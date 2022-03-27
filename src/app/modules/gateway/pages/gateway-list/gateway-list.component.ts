@@ -17,7 +17,7 @@ export class GatewayListComponent implements OnInit {
     }
 
     /** Opens the drawer with the create gateway form. */
-    openCreateDrawer(): void {
+    openCreateForm(): void {
         const ref = this._globalDrawerService.openCreateGatewayForm();
     }
 

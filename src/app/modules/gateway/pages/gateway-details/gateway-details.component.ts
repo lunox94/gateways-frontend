@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DeviceStatus, Gateway } from 'src/app/core/models/models';
+import { GlobalDrawerService } from 'src/app/core/services/global-drawer.service';
 
 @Component({
     templateUrl: './gateway-details.component.html',
@@ -7,7 +8,7 @@ import { DeviceStatus, Gateway } from 'src/app/core/models/models';
 export class GatewayDetailsComponent implements OnInit {
     gateway?: Gateway;
 
-    constructor() {}
+    constructor(private _globalDrawerService: GlobalDrawerService) {}
 
     ngOnInit(): void {
         this.gateway = {
@@ -29,5 +30,11 @@ export class GatewayDetailsComponent implements OnInit {
                 },
             ],
         };
+    }
+
+    openEditGatewayForm(): void {
+        const ref = this._globalDrawerService.openEditGatewayForm(
+            this.gateway!
+        );
     }
 }
