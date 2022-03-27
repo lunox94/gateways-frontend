@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { Device, DeviceStatus, Gateway } from 'src/app/core/models/models';
+import { GlobalDrawerService } from 'src/app/core/services/global-drawer.service';
 import { GatewayFormComponent } from 'src/app/shared/custom-components/gateway-form/gateway-form.component';
 
 @Component({
@@ -9,7 +10,7 @@ import { GatewayFormComponent } from 'src/app/shared/custom-components/gateway-f
 export class GatewayListComponent implements OnInit {
     sampleData: Gateway[] = [];
 
-    constructor(private _drawerService: NzDrawerService) {}
+    constructor(private _globalDrawerService: GlobalDrawerService) {}
 
     ngOnInit(): void {
         this.sampleData = this._getSampleData();
@@ -17,12 +18,7 @@ export class GatewayListComponent implements OnInit {
 
     /** Opens the drawer with the create gateway form. */
     openCreateDrawer(): void {
-        const ref = this._drawerService.create({
-            nzContent: GatewayFormComponent,
-            nzTitle: 'Create',
-            nzMaskClosable: false,
-            nzWidth: 520,
-        });
+        const ref = this._globalDrawerService.openCreateGatewayForm();
     }
 
     private _getSampleData() {
