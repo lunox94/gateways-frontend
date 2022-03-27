@@ -7,6 +7,7 @@ import { DevicesStatusCellComponent } from './devices-status-cell/devices-status
 import { DeviceTableComponent } from './device-table/device-table.component';
 import { RouterModule } from '@angular/router';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 @NgModule({
     declarations: [
@@ -22,6 +23,7 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
         NzTableModule,
         NzBadgeModule,
         NzDividerModule,
+        NzPopconfirmModule,
     ],
     exports: [GatewayTableComponent, DeviceTableComponent],
 })

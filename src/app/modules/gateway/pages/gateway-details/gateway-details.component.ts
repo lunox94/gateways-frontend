@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { DeviceStatus, Gateway } from 'src/app/core/models/models';
 import { GlobalDrawerService } from 'src/app/core/services/global-drawer.service';
 
@@ -8,7 +9,10 @@ import { GlobalDrawerService } from 'src/app/core/services/global-drawer.service
 export class GatewayDetailsComponent implements OnInit {
     gateway?: Gateway;
 
-    constructor(private _globalDrawerService: GlobalDrawerService) {}
+    constructor(
+        private _globalDrawerService: GlobalDrawerService,
+        private _router: Router
+    ) {}
 
     ngOnInit(): void {
         this.gateway = {
@@ -32,9 +36,15 @@ export class GatewayDetailsComponent implements OnInit {
         };
     }
 
+    /** Opens a drawer with the form to edit the current gateway. */
     openEditGatewayForm(): void {
         const ref = this._globalDrawerService.openEditGatewayForm(
             this.gateway!
         );
+    }
+
+    /** Called when the user confirms he wants to delete the current gateway. */
+    confirmDelete(): void {
+        this._router.navigate(['gateways']);
     }
 }

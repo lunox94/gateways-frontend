@@ -24,9 +24,14 @@
                     ></app-devices-status-cell>
                 </td>
                 <td>
-                    <a [routerLink]="'./' + data.uid">Details</a>
+                    <a [routerLink]="'./' + data.uid">View</a>
                     <nz-divider nzType="vertical"></nz-divider>
-                    <a>Delete</a>
+                    <a
+                        nz-popconfirm
+                        nzPopconfirmTitle="Are you sure to delete this gateway?"
+                        nzPopconfirmPlacement="bottom"
+                        >Delete</a
+                    >
                 </td>
             </tr>
             <tr [nzExpand]="expandSet.has(data.uid)">

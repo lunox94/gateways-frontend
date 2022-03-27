@@ -16,7 +16,15 @@
 
 <!-- Gateway actions -->
 <div class="flex flex-row">
-    <a nz-button nzType="text" nzSize="large">
+    <a
+        nz-button
+        nzType="text"
+        nzSize="large"
+        nz-popconfirm
+        nzPopconfirmTitle="Are you sure to delete this gateway?"
+        nzPopconfirmPlacement="right"
+        (nzOnConfirm)="confirmDelete()"
+    >
         <i nz-icon nzType="delete" class="text-blue-500"></i>
         Delete
     </a>
