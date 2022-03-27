@@ -7,6 +7,8 @@ import { GatewayComponentsModule } from '../../components/gateway-components.mod
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 
 const gatewayDetailsRoutes: Route[] = [
     {
@@ -26,7 +28,9 @@ const gatewayDetailsRoutes: Route[] = [
         NzDescriptionsModule,
         NzDividerModule,
         NzButtonModule,
+        NzCardModule,
         NzIconModule,
+        NzBreadCrumbModule,
     ],
 })
 export class GatewayDetailsModule {}

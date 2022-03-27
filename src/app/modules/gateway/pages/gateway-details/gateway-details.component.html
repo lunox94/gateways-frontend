@@ -1,4 +1,32 @@
-<h2 nz-typography>Gateway - {{ gateway?.name }}</h2>
+<!-- Breadcrub -->
+<nz-breadcrumb class="mb-4">
+    <nz-breadcrumb-item>
+        <a [routerLink]="'../'">
+            <i nz-icon nzType="gateway"></i>
+            <span>Gateway list</span>
+        </a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>Gateway</nz-breadcrumb-item>
+</nz-breadcrumb>
+
+<!-- Header -->
+<h2 nz-typography class="mb-0">{{ gateway?.name }}</h2>
+
+<div class="text-xs mb-4 text-gray-500">Gateway</div>
+
+<!-- Gateway actions -->
+<div class="flex flex-row">
+    <a nz-button nzType="text" nzSize="large">
+        <i nz-icon nzType="delete" class="text-blue-500"></i>
+        Delete
+    </a>
+    <a nz-button nzType="text" nzSize="large">
+        <i nz-icon nzType="edit" class="text-blue-500"></i>
+        Edit
+    </a>
+</div>
+
+<nz-divider class="mt-0"></nz-divider>
 
 <nz-descriptions nzTitle="Info">
     <nz-descriptions-item nzTitle="UID">{{
@@ -12,20 +40,24 @@
     }}</nz-descriptions-item>
 </nz-descriptions>
 
+<nz-divider></nz-divider>
+
 <!-- Devices section -->
+<nz-card>
+    <div class="font-bold text-base mb-2">
+        Devices ({{ (gateway?.devices)!.length }})
+    </div>
+    <!-- Device actions -->
+    <a nz-button nzType="text" nzSize="large">
+        <i nz-icon nzType="plus" class="text-blue-500"></i>
+        Create
+    </a>
 
-<div class="font-bold text-base mb-2">Devices</div>
+    <!-- <nz-divider class="mt-0"></nz-divider> -->
 
-<!-- Device actions -->
-<a nz-button nzType="text" nzSize="large">
-    <i nz-icon nzType="plus" class="text-blue-500"></i>
-    Create
-</a>
-
-<nz-divider class="mt-0"></nz-divider>
-
-<app-device-table
-    [deviceList]="gateway?.devices ?? []"
-    [bordered]="false"
-    [hasTitle]="false"
-></app-device-table>
+    <app-device-table
+        [deviceList]="gateway?.devices ?? []"
+        [bordered]="true"
+        [hasTitle]="false"
+    ></app-device-table>
+</nz-card>
