@@ -30,14 +30,23 @@
                 <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="ipv4"
                     >IPv4</nz-form-label
                 >
-                <nz-form-control [nzXs]="24" nzErrorTip="IPv4 can not be empty">
+                <nz-form-control [nzXs]="24" [nzErrorTip]="ipv4ErrorTpl">
                     <input
                         nz-input
                         formControlName="ipv4"
                         placeholder="255.0.0.0"
                         id="ipv4"
                         [mask]="'099.099.099.099'"
+                        [dropSpecialCharacters]="false"
                     />
+                    <ng-template #ipv4ErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')"
+                            >IPv4 can not be empty</ng-container
+                        >
+                        <ng-container *ngIf="control.hasError('ipv4')"
+                            >Please enter a valid IPv4 address</ng-container
+                        >
+                    </ng-template>
                 </nz-form-control>
             </nz-form-item>
         </div>

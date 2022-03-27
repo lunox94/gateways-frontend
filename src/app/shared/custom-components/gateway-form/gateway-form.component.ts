@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { Observable, Subject, timer } from 'rxjs';
 import { Gateway } from 'src/app/core/models/models';
+import { ipv4 } from 'src/app/core/validators/ipv4.validator';
 
 @Component({
     selector: 'app-gateway-form',
@@ -38,7 +39,7 @@ export class GatewayFormComponent implements OnInit {
     ngOnInit(): void {
         this.form = this._fb.group({
             name: [this.gateway?.name, [Validators.required]],
-            ipv4: [this.gateway?.ipv4, [Validators.required]],
+            ipv4: [this.gateway?.ipv4, [Validators.required, ipv4()]],
         });
     }
 
