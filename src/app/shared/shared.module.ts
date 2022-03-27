@@ -8,6 +8,8 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
+
+        // NG-ZORRO imports
         NzTypographyModule,
     ],
     exports: [
