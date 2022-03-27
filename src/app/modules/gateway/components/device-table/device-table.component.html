@@ -1,0 +1,36 @@
+<nz-table
+    #table
+    [nzData]="deviceList"
+    [nzShowPagination]="false"
+    nzSize="middle"
+    nzBordered
+    nzTitle="Devices"
+>
+    <thead>
+        <tr>
+            <th>UID</th>
+            <th>Vendor</th>
+            <th>Created At</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let data of table.data">
+            <td>{{ data.uid }}</td>
+            <td>{{ data.vendor }}</td>
+            <td>{{ data.createdAt | date }}</td>
+            <td>
+                <nz-badge
+                    [nzStatus]="
+                        data.status === _statusEnum.Online ? 'success' : 'error'
+                    "
+                    [nzText]="
+                        data.status === _statusEnum.Online
+                            ? 'Online'
+                            : 'Offline'
+                    "
+                ></nz-badge>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>

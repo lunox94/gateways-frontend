@@ -28,9 +28,11 @@
                 </td>
             </tr>
             <tr [nzExpand]="expandSet.has(data.uid)">
-                {{
-                    data.devices.length
-                }}
+                <div class="pl-10">
+                    <app-device-table
+                        [deviceList]="data.devices"
+                    ></app-device-table>
+                </div>
             </tr>
         </ng-container>
     </tbody>
