@@ -1,1 +1,69 @@
-<p>device-form works!</p>
+<form
+    nz-form
+    [formGroup]="form!"
+    (ngSubmit)="onSubmit()"
+    class="flex flex-col h-full"
+>
+    <!-- Main content -->
+    <div class="flex-grow">
+        <div class="grid grid-cols-1 gap-2">
+            <!-- Vendor name field -->
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="vendor"
+                    >Vendor name</nz-form-label
+                >
+                <nz-form-control
+                    [nzXs]="24"
+                    nzErrorTip="Vendor name can not be empty"
+                >
+                    <input
+                        nz-input
+                        formControlName="vendor"
+                        placeholder="Vendor name"
+                        id="vendor"
+                    />
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="status"
+                    >Status</nz-form-label
+                >
+                <nz-form-control
+                    [nzXs]="24"
+                    nzErrorTip="Please select a status"
+                >
+                    <nz-select
+                        id="status"
+                        formControlName="status"
+                        nzPlaceHolder="Select an option"
+                    >
+                        <nz-option
+                            [nzValue]="_statusEnum.Online"
+                            nzLabel="Online"
+                        ></nz-option>
+                        <nz-option
+                            [nzValue]="_statusEnum.Offline"
+                            nzLabel="Offline"
+                        ></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+    </div>
+
+    <nz-divider class="-mx-[24px] mb-[8px] w-auto"></nz-divider>
+
+    <!-- Footer -->
+    <div class="flex flex-row -mb-[16px] -ml-[16px]">
+        <button
+            nz-button
+            nzType="primary"
+            [nzLoading]="loading$ | async"
+            class="mr-2"
+        >
+            Submit
+        </button>
+        <button nz-button (click)="close()" type="button">Cancel</button>
+    </div>
+</form>

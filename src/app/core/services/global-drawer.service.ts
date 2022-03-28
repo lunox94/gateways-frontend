@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
 import { DeviceFormComponent } from 'src/app/shared/custom-components/device-form/device-form.component';
 import { GatewayFormComponent } from 'src/app/shared/custom-components/gateway-form/gateway-form.component';
-import { Gateway } from '../models/models';
+import { Device, Gateway } from '../models/models';
 
 const DRAWER_WITH = 520;
 
@@ -58,6 +58,24 @@ export class GlobalDrawerService {
             nzContent: DeviceFormComponent,
             nzContentParams: { gatewayUid: gateway.uid },
             nzTitle: 'Create device',
+            nzMaskClosable: false,
+            nzWidth: DRAWER_WITH,
+        });
+    }
+
+    /**
+     * Opens a drawer with a form to edit a device
+     * using the NzDrawerService.
+     */
+    openEditDeviceForm(device: Device): NzDrawerRef<DeviceFormComponent, any> {
+        return this._drawerService.create<
+            DeviceFormComponent,
+            { device: Device },
+            any
+        >({
+            nzContent: DeviceFormComponent,
+            nzContentParams: { device },
+            nzTitle: 'Edit device',
             nzMaskClosable: false,
             nzWidth: DRAWER_WITH,
         });

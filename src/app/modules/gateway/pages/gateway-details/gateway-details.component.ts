@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { DeviceStatus, Gateway } from 'src/app/core/models/models';
+import { Device, DeviceStatus, Gateway } from 'src/app/core/models/models';
 import { GlobalDrawerService } from 'src/app/core/services/global-drawer.service';
 
 @Component({
@@ -50,6 +50,13 @@ export class GatewayDetailsComponent implements OnInit {
         const ref = this._globalDrawerService.openCreateDeviceForm(
             this.gateway!
         );
+    }
+
+    /**
+     * Opens a drawer with the form to edit a device for the current
+     * gateway. */
+    openEditDeviceForm(device: Device): void {
+        const ref = this._globalDrawerService.openEditDeviceForm(device);
     }
 
     /** Called when the user confirms he wants to delete the current gateway. */

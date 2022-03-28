@@ -28,7 +28,7 @@ export class GatewayFormComponent implements OnInit {
     loading$: Observable<boolean>;
 
     constructor(
-        private _drawerRef: NzDrawerRef<string>,
+        private _drawerRef: NzDrawerRef<GatewayFormComponent>,
         private _fb: FormBuilder
     ) {
         // set up state management for this component

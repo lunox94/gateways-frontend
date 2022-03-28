@@ -55,17 +55,18 @@
     <div class="font-bold text-base mb-2">
         Devices ({{ (gateway?.devices)!.length }})
     </div>
+
     <!-- Device actions -->
     <a nz-button nzType="text" nzSize="large" (click)="openCreateDeviceForm()">
         <i nz-icon nzType="plus" class="text-blue-500"></i>
         Create
     </a>
 
-    <!-- <nz-divider class="mt-0"></nz-divider> -->
-
     <app-device-table
         [deviceList]="gateway?.devices ?? []"
         [bordered]="true"
         [hasTitle]="false"
+        [showActions]="true"
+        (editRequested)="openEditDeviceForm($event)"
     ></app-device-table>
 </nz-card>
