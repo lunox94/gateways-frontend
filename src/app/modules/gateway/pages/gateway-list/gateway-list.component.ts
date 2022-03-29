@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 import { GatewayApiService } from 'src/app/core/api/gateway/gateway-api.service';
 import { Gateway } from 'src/app/core/models/models';
 import { GlobalDrawerService } from 'src/app/core/services/global-drawer.service';
@@ -16,7 +17,7 @@ export class GatewayListComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.gateways$ = this._gatewayApiService.getAll();
+        this.gateways$ = this._gatewayApiService.getAll().pipe(shareReplay(1));
     }
 
     /** Opens the drawer with the create gateway form. */

@@ -10,6 +10,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 const gatewayDetailsRoutes: Route[] = [
     {
@@ -33,6 +34,7 @@ const gatewayDetailsRoutes: Route[] = [
         NzIconModule,
         NzBreadCrumbModule,
         NzPopconfirmModule,
+        NzSpinModule,
     ],
 })
 export class GatewayDetailsModule {}

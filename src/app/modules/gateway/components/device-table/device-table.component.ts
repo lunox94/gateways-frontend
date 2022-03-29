@@ -18,6 +18,9 @@ export class DeviceTableComponent implements OnInit {
     /** Whether or not the table should show the actions column. */
     @Input() showActions = false;
 
+    /** Whether the table is loading its content. */
+    @Input() loading = false;
+
     /** Emit a device that has been selected for edition. */
     @Output() editRequested = new EventEmitter<Device>();
 

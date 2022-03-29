@@ -1,55 +1,61 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Device, DeviceStatus, Gateway } from 'src/app/core/models/models';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map, mapTo, shareReplay, startWith, switchMap } from 'rxjs/operators';
+import { GatewayApiService } from 'src/app/core/api/gateway/gateway-api.service';
+import { Device, Gateway } from 'src/app/core/models/models';
 import { GlobalDrawerService } from 'src/app/core/services/global-drawer.service';
+import { GATEWAY_PARAM_UID } from '../../gateway.module';
 
 @Component({
     templateUrl: './gateway-details.component.html',
 })
 export class GatewayDetailsComponent implements OnInit {
-    gateway?: Gateway;
+    gateway$!: Observable<Gateway>;
+
+    loading$!: Observable<boolean>;
+
+    gatewayUid$!: Observable<string>;
 
     constructor(
         private _globalDrawerService: GlobalDrawerService,
-        private _router: Router
+        private _router: Router,
+        private _activatedRoute: ActivatedRoute,
+        private _gatewayApiService: GatewayApiService
     ) {}
 
     ngOnInit(): void {
-        this.gateway = {
-            uid: 'asxy00-45fghh-43566h-dggxx2',
-            ipv4: '255.0.0.0',
-            name: 'PSI-2004',
-            devices: [
-                {
-                    uid: 1,
-                    createdAt: new Date(Date.now()),
-                    status: DeviceStatus.Online,
-                    vendor: 'CISCO',
-                },
-                {
-                    uid: 2,
-                    createdAt: new Date(Date.now()),
-                    status: DeviceStatus.Offline,
-                    vendor: 'Logitech',
-                },
-            ],
-        };
+        this.gatewayUid$ = this._activatedRoute.paramMap.pipe(
+            map((params) => params.get(GATEWAY_PARAM_UID)!),
+            shareReplay(1)
+        );
+
+        this.gateway$ = this.gatewayUid$.pipe(
+            switchMap((uid) => this._gatewayApiService.get(uid)),
+            shareReplay(1)
+        );
+
+        this.loading$ = this.gateway$.pipe(
+            mapTo(false),
+            startWith(true),
+            shareReplay(1)
+        );
     }
 
     /** Opens a drawer with the form to edit the current gateway. */
     openEditGatewayForm(): void {
-        const ref = this._globalDrawerService.openEditGatewayForm(
-            this.gateway!
-        );
+        // const ref = this._globalDrawerService.openEditGatewayForm(
+        //     this.gateway!
+        // );
     }
 
     /**
      * Opens a drawer with the form to create a device for the current
      * gateway. */
     openCreateDeviceForm(): void {
-        const ref = this._globalDrawerService.openCreateDeviceForm(
-            this.gateway!
-        );
+        // const ref = this._globalDrawerService.openCreateDeviceForm(
+        //     this.gateway!
+        // );
     }
 
     /**

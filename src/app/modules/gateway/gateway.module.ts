@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Route, RouterModule } from '@angular/router';
 
+export const GATEWAY_PARAM_UID = 'uid';
+
 const gatewayRoutes: Route[] = [
     {
         path: '',
@@ -11,7 +13,7 @@ const gatewayRoutes: Route[] = [
             ),
     },
     {
-        path: ':id',
+        path: `:${GATEWAY_PARAM_UID}`,
         loadChildren: () =>
             import('./pages/gateway-details/gateway-details.module').then(
                 (m) => m.GatewayDetailsModule
