@@ -6,10 +6,13 @@ import { Gateway } from 'src/app/core/models/models';
     templateUrl: './gateway-table.component.html',
 })
 export class GatewayTableComponent implements OnInit {
-    //** List of gateways to display in a table. */
+    /** List of gateways to display in a table. */
     @Input() gatewayList: Gateway[] = [];
 
-    //** Set of gateway ids to represent which row in the table is expanded */
+    /** Whether or not the table is loading its content. */
+    @Input() loading: boolean = true;
+
+    /** Set of gateway ids to represent which row in the table is expanded */
     expandSet: Set<string>;
 
     constructor() {
