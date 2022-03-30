@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { merge, Observable, of, Subject } from 'rxjs';
-import { filter, mapTo, shareReplay, startWith, switchMap } from 'rxjs/operators';
+import { merge, Observable, Subject } from 'rxjs';
+import {
+    filter,
+    mapTo,
+    shareReplay,
+    startWith,
+    switchMap,
+} from 'rxjs/operators';
 import { GatewayApiService } from 'src/app/core/api/gateway/gateway-api.service';
 import { Gateway } from 'src/app/core/models/models';
 import { GlobalDrawerService } from 'src/app/core/services/global-drawer.service';
@@ -14,7 +20,7 @@ export class GatewayListComponent implements OnInit {
      */
     gateways$!: Observable<Gateway[]>;
 
-    /** 
+    /**
      * Emits a boolean that indicates whether or not the
      * gateways are being loading.
      */
@@ -35,7 +41,7 @@ export class GatewayListComponent implements OnInit {
         // When the form is closed it will return a boolean that indicates whether
         // or not a gateway was created.
         const afterClose$ = this._createGatewayRequest.pipe(
-            switchMap(this._openDrawer)            
+            switchMap(this._openDrawer)
         );
 
         const afterGatewayDelete$ = this._deleteGatewayRequest.pipe(
@@ -58,7 +64,7 @@ export class GatewayListComponent implements OnInit {
         );
 
         // Indicates that a request to load gateways has started.
-        const loadStarts$ = reloadGateways$.pipe(mapTo(true));
+        const loadStarts$ = reloadGateways$.pipe(startWith(true), mapTo(true));
 
         // Indicates that a request to load gateways has finished.
         const loadEnds$ = this.gateways$.pipe(mapTo(false));
@@ -85,5 +91,6 @@ export class GatewayListComponent implements OnInit {
 
     private readonly _getAllGateways = () => this._gatewayApiService.getAll();
 
-    private readonly _deleteGateway = ({uid}: Gateway) => this._gatewayApiService.delete(uid);
+    private readonly _deleteGateway = ({ uid }: Gateway) =>
+        this._gatewayApiService.delete(uid);
 }

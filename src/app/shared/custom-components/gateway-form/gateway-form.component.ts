@@ -2,8 +2,13 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { Observable, Subject, timer } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { GatewayApiService } from 'src/app/core/api/gateway/gateway-api.service';
-import { Gateway, GatewayToCreate } from 'src/app/core/models/models';
+import {
+    Gateway,
+    GatewayToCreate,
+    GatewayToUpdate,
+} from 'src/app/core/models/models';
 import { ipv4 } from 'src/app/core/validators/ipv4.validator';
 
 @Component({
@@ -56,15 +61,25 @@ export class GatewayFormComponent implements OnInit {
             // submit data
             this._loadingController.next(true);
 
-            const gatewayToCreate: GatewayToCreate = this.form.value;
-
             // if there is no gateway then this form was open to create a new
             // gateway.
             if (!this.gateway) {
-                this._gatewayApiService.post(gatewayToCreate).subscribe((g) => {
-                    console.log(g);
-                    this._drawerRef.close(true);
-                });
+                const gatewayToCreate: GatewayToCreate = this.form.value;
+                this._gatewayApiService
+                    .post(gatewayToCreate)
+                    .pipe(take(1))
+                    .subscribe((_) => {
+                        this._drawerRef.close(true);
+                    });
+                // else then this form was open to edit a gateway.
+            } else {
+                const gatewayToUpdate: GatewayToUpdate = this.form.value;
+                this._gatewayApiService
+                    .put(this.gateway!.uid, gatewayToUpdate)
+                    .pipe(take(1))
+                    .subscribe(() => {
+                        this._drawerRef.close(true);
+                    });
             }
         } else {
             Object.values(this.form!.controls).forEach((control) => {

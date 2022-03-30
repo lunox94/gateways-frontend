@@ -1,7 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map, mapTo, shareReplay, startWith, switchMap } from 'rxjs/operators';
+import { combineLatest, merge, Observable, Subject } from 'rxjs';
+import {
+    filter,
+    map,
+    mapTo,
+    shareReplay,
+    startWith,
+    switchMap,
+    switchMapTo,
+} from 'rxjs/operators';
 import { GatewayApiService } from 'src/app/core/api/gateway/gateway-api.service';
 import { Device, Gateway } from 'src/app/core/models/models';
 import { GlobalDrawerService } from 'src/app/core/services/global-drawer.service';
@@ -17,6 +25,8 @@ export class GatewayDetailsComponent implements OnInit {
 
     gatewayUid$!: Observable<string>;
 
+    private readonly _updateGatewayRequest = new Subject<Gateway>();
+
     constructor(
         private _globalDrawerService: GlobalDrawerService,
         private _router: Router,
@@ -25,28 +35,35 @@ export class GatewayDetailsComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        const afterUpdateGatewayClose$ = this._updateGatewayRequest.pipe(
+            switchMap(this._openEditGatewayForm)
+        );
+
+        const reloadGateway$ = afterUpdateGatewayClose$.pipe(
+            filter<boolean>(Boolean),
+            shareReplay(1)
+        );
+
         this.gatewayUid$ = this._activatedRoute.paramMap.pipe(
             map((params) => params.get(GATEWAY_PARAM_UID)!),
             shareReplay(1)
         );
 
-        this.gateway$ = this.gatewayUid$.pipe(
-            switchMap((uid) => this._gatewayApiService.get(uid)),
+        this.gateway$ = reloadGateway$.pipe(
+            startWith(true),
+            switchMapTo(this.gatewayUid$),
+            switchMap(this._getGateway),
             shareReplay(1)
         );
 
-        this.loading$ = this.gateway$.pipe(
-            mapTo(false),
-            startWith(true),
-            shareReplay(1)
-        );
+        const loadStarts$ = reloadGateway$.pipe(startWith(true), mapTo(true));
+        const loadEnds$ = this.gateway$.pipe(mapTo(false));
+
+        this.loading$ = merge(loadStarts$, loadEnds$).pipe(shareReplay(1));
     }
 
-    /** Opens a drawer with the form to edit the current gateway. */
-    openEditGatewayForm(): void {
-        // const ref = this._globalDrawerService.openEditGatewayForm(
-        //     this.gateway!
-        // );
+    requestToEditGateway(gateway: Gateway) {
+        this._updateGatewayRequest.next(gateway);
     }
 
     /**
@@ -69,4 +86,10 @@ export class GatewayDetailsComponent implements OnInit {
     confirmDelete(): void {
         this._router.navigate(['gateways']);
     }
+
+    private readonly _openEditGatewayForm = (gateway: Gateway) =>
+        this._globalDrawerService.openEditGatewayForm(gateway).afterClose;
+
+    private readonly _getGateway = (uid: string) =>
+        this._gatewayApiService.get(uid);
 }

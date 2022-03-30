@@ -17,7 +17,7 @@
 <div class="text-xs mb-4 text-gray-500">Gateway</div>
 
 <!-- Gateway actions -->
-<div class="flex flex-row">
+<div class="flex flex-row" *ngIf="gateway$ | async as gateway">
     <a
         nz-button
         nzType="text"
@@ -30,7 +30,12 @@
         <i nz-icon nzType="delete" class="text-blue-500"></i>
         Delete
     </a>
-    <a nz-button nzType="text" nzSize="large" (click)="openEditGatewayForm()">
+    <a
+        nz-button
+        nzType="text"
+        nzSize="large"
+        (click)="requestToEditGateway(gateway)"
+    >
         <i nz-icon nzType="edit" class="text-blue-500"></i>
         Edit
     </a>
