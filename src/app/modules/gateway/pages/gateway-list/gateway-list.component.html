@@ -17,5 +17,6 @@
     <app-gateway-table
         [gatewayList]="(gateways$ | async) ?? []"
         [loading]="!!(loading$ | async)"
+        (deleteRequested)="requestToDeleteGateway($event)"
     ></app-gateway-table>
 </div>

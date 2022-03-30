@@ -28,6 +28,7 @@
                         nz-popconfirm
                         nzPopconfirmTitle="Are you sure to delete this gateway?"
                         nzPopconfirmPlacement="bottom"
+                        (nzOnConfirm)="deleteRequested.emit(data)"
                         >Delete</a
                     >
                     <nz-divider nzType="vertical"></nz-divider>

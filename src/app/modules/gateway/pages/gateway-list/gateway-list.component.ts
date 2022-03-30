@@ -21,6 +21,7 @@ export class GatewayListComponent implements OnInit {
     loading$!: Observable<boolean>;
 
     private readonly _createGatewayRequest = new Subject();
+    private readonly _deleteGatewayRequest = new Subject<Gateway>();
 
     constructor(
         private _globalDrawerService: GlobalDrawerService,
@@ -30,10 +31,19 @@ export class GatewayListComponent implements OnInit {
     ngOnInit(): void {
         // Open a drawer with the create gateway form every time it is requested.
         // When the form is closed it will return a boolean that indicates whether
-        // or not a gateway was created. From this an observable will be created
-        // that emits whenever is needed to update the list of gateways.
-        const reloadGateways$ = this._createGatewayRequest.pipe(
-            switchMap(this._openDrawer),
+        // or not a gateway was created.
+        const afterClose$ = this._createGatewayRequest.pipe(
+            switchMap(this._openDrawer)            
+        );
+
+        const afterGatewayDelete$ = this._deleteGatewayRequest.pipe(
+            switchMap(this._deleteGateway),
+            mapTo(true)
+        );
+
+        // From this an observable will be created that emits
+        // whenever is needed to update the list of gateways.
+        const reloadGateways$ = merge(afterClose$, afterGatewayDelete$).pipe(
             filter<boolean>(Boolean),
             shareReplay(1)
         );
@@ -60,8 +70,14 @@ export class GatewayListComponent implements OnInit {
         this._createGatewayRequest.next();
     }
 
+    requestToDeleteGateway(gateway: Gateway): void {
+        this._deleteGatewayRequest.next(gateway);
+    }
+
     private readonly _openDrawer = () =>
         this._globalDrawerService.openCreateGatewayForm().afterClose;
 
     private readonly _getAllGateways = () => this._gatewayApiService.getAll();
+
+    private readonly _deleteGateway = ({uid}: Gateway) => this._gatewayApiService.delete(uid);
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Gateway } from 'src/app/core/models/models';
 
 @Component({
@@ -11,6 +11,9 @@ export class GatewayTableComponent implements OnInit {
 
     /** Whether or not the table is loading its content. */
     @Input() loading: boolean = true;
+
+    /** Emits a gateway that has been selected for deletion. */
+    @Output() deleteRequested = new EventEmitter<Gateway>();
 
     /** Set of gateway ids to represent which row in the table is expanded */
     expandSet: Set<string>;

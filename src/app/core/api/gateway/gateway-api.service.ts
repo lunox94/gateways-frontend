@@ -30,10 +30,24 @@ export class GatewayApiService {
         return this._http.get<Gateway>(this._urlService.gatewayGet(uid));
     }
 
+    /**
+     * Creates a new gateway.
+     * @param gatewayToCreate Data to create a new gateway.
+     * @returns An observable containing the newly created gateway.
+     */
     post(gatewayToCreate: GatewayToCreate): Observable<Gateway> {
         return this._http.post<Gateway>(
             this._urlService.gatewayPost(),
             gatewayToCreate
         );
+    }
+
+    /**
+     * Deletes a gateway given its uid.
+     * @param uid The uid of the gateway to be deleted.
+     * @returns An observable that emits once the request finishes.
+     */
+    delete(uid: string): Observable<any> {
+        return this._http.delete(this._urlService.gatewayDelete(uid));
     }
 }
