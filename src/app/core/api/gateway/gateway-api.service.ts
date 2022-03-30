@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { DeviceToUpdate } from '../../models/device-to-update.model';
 import { GatewayToUpdate } from '../../models/gateway-to-update.model';
 import {
     Device,
@@ -93,5 +94,20 @@ export class GatewayApiService {
             this._urlService.devicePost(uid),
             deviceToCreate
         );
+    }
+
+    /**
+     * Updates an existing device.
+     * @param uid The uid of the gateway that owns the device.
+     * @param duid The uid of the device to update.
+     * @param deviceToUpdate Data to update the device.
+     * @returns An observable that emits when the request finishes.
+     */
+    putDevice(
+        uid: string,
+        duid: string,
+        deviceToUpdate: DeviceToUpdate
+    ): Observable<any> {
+        return this._http.put(this._urlService.devicePut(uid, duid), deviceToUpdate);
     }
 }
