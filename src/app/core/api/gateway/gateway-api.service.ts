@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { GatewayToUpdate } from '../../models/gateway-to-update.model';
 import { Gateway, GatewayToCreate } from '../../models/models';
 import { ApiMasterUrlService } from '../api-master-url.service';
 
@@ -40,6 +41,16 @@ export class GatewayApiService {
             this._urlService.gatewayPost(),
             gatewayToCreate
         );
+    }
+
+    /**
+     * Updates a gateway.
+     * @param uid The uid of the gateway to update.
+     * @param gatewayToUpdate Data to update the gateway.
+     * @returns An observable that emits once the request finishes.
+     */
+    put(uid: string, gatewayToUpdate: GatewayToUpdate): Observable<any> {
+        return this._http.put(this._urlService.gatewayPut(uid), gatewayToUpdate);
     }
 
     /**

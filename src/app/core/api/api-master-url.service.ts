@@ -9,5 +9,6 @@ export class ApiMasterUrlService {
     readonly gatewayGet = (uid: string) =>
         `${environment.apiUrl}/gateways/${uid}`;
     readonly gatewayPost = () => `${environment.apiUrl}/gateways`;
+    readonly gatewayPut = (uid: string) => `${environment.apiUrl}/gateways/${uid}`;
     readonly gatewayDelete = (uid: string) => `${environment.apiUrl}/gateways/${uid}`;
 }
