@@ -20,10 +20,13 @@ import { GATEWAY_PARAM_UID } from '../../gateway.module';
     templateUrl: './gateway-details.component.html',
 })
 export class GatewayDetailsComponent implements OnInit {
+    /** Emits the current gateway when loads the first time and on every update. */
     gateway$!: Observable<Gateway>;
 
+    /** Emits a component-scoped loading state. */
     loading$!: Observable<boolean>;
 
+    /** Emits the uid of the gateway gotten from the route. */
     gatewayUid$!: Observable<string>;
 
     private readonly _updateGatewayRequest = new Subject<Gateway>();
@@ -37,6 +40,10 @@ export class GatewayDetailsComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        this._setUpGatewayStateManagement();
+    }
+
+    private _setUpGatewayStateManagement() {
         // Open a drawer with the edit gateway form every time it is requested.
         // When the form is closed it will return a boolean that indicates whether
         // or not the gateway was updated.
