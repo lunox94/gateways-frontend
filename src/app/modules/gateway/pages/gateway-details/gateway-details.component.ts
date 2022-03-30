@@ -9,6 +9,7 @@ import {
     startWith,
     switchMap,
     switchMapTo,
+    tap,
 } from 'rxjs/operators';
 import { GatewayApiService } from 'src/app/core/api/gateway/gateway-api.service';
 import { Device, Gateway } from 'src/app/core/models/models';
@@ -26,6 +27,7 @@ export class GatewayDetailsComponent implements OnInit {
     gatewayUid$!: Observable<string>;
 
     private readonly _updateGatewayRequest = new Subject<Gateway>();
+    private readonly _deleteGatewayRequest = new Subject<Gateway>();
 
     constructor(
         private _globalDrawerService: GlobalDrawerService,
@@ -63,18 +65,49 @@ export class GatewayDetailsComponent implements OnInit {
             shareReplay(1)
         );
 
+        // Emits when the gateway was deleted.
+        const afterGatewayDelete$ = this._deleteGatewayRequest.pipe(
+            switchMap(this._deleteGateway),
+            mapTo(true)
+        );
+
         // Indicates that a request to load the gateway has started.
         const loadStarts$ = reloadGateway$.pipe(startWith(true), mapTo(true));
+
+        // Indicates that a request to delete the gateway has started.
+        const deleteStarts$ = this._deleteGatewayRequest.pipe(mapTo(true));
+
         // Indicates that a request to load the gateway has ended.
         const loadEnds$ = this.gateway$.pipe(mapTo(false));
 
+        const deleteEnd$ = afterGatewayDelete$.pipe(
+            tap((_) => this._router.navigate(['gateways'])),
+            mapTo(false)
+        );
+
         // Build the loading state that indicates if the gateway is being fetched.
-        this.loading$ = merge(loadStarts$, loadEnds$).pipe(shareReplay(1));
+        this.loading$ = merge(
+            loadStarts$,
+            deleteStarts$,
+            loadEnds$,
+            deleteEnd$
+        ).pipe(shareReplay(1));
     }
 
-    /** Requests to open a drawer with the edit gateway form. */
+    /**
+     * Requests to open a drawer with the edit gateway form.
+     * @param gateway The gateway to update.
+     */
     requestToEditGateway(gateway: Gateway) {
         this._updateGatewayRequest.next(gateway);
+    }
+
+    /**
+     * Requests to delete a gateway.
+     * @param gateway The gateway to delete.
+     */
+    requestToDeleteGateway(gateway: Gateway): void {
+        this._deleteGatewayRequest.next(gateway);
     }
 
     /**
@@ -93,14 +126,12 @@ export class GatewayDetailsComponent implements OnInit {
         const ref = this._globalDrawerService.openEditDeviceForm(device);
     }
 
-    /** Called when the user confirms he wants to delete the current gateway. */
-    confirmDelete(): void {
-        this._router.navigate(['gateways']);
-    }
-
     private readonly _openEditGatewayForm = (gateway: Gateway) =>
         this._globalDrawerService.openEditGatewayForm(gateway).afterClose;
 
     private readonly _getGateway = (uid: string) =>
         this._gatewayApiService.get(uid);
+
+    private readonly _deleteGateway = ({ uid }: Gateway) =>
+        this._gatewayApiService.delete(uid);
 }

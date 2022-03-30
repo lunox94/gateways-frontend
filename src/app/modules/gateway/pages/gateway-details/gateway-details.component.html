@@ -25,7 +25,7 @@
         nz-popconfirm
         nzPopconfirmTitle="Are you sure to delete this gateway?"
         nzPopconfirmPlacement="right"
-        (nzOnConfirm)="confirmDelete()"
+        (nzOnConfirm)="requestToDeleteGateway(gateway)"
     >
         <i nz-icon nzType="delete" class="text-blue-500"></i>
         Delete
@@ -70,7 +70,7 @@
         <span *ngIf="gateway$ | async as gateway">
             ({{ gateway.devices.length }})
         </span>
-        <span *ngIf="!!(loading$ | async)">(-)</span>
+        <span *ngIf="!(gateway$ | async)">(-)</span>
     </div>
 
     <!-- Device actions -->
