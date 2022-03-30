@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest, merge, Observable, Subject } from 'rxjs';
+import { merge, Observable, Subject } from 'rxjs';
 import {
     filter,
     map,
