@@ -113,4 +113,14 @@ export class GatewayApiService {
             deviceToUpdate
         );
     }
+
+    /**
+     * Deletes an existing device.
+     * @param uid The uid of the gateway that owns the device.
+     * @param duid The uid of the device to delete.
+     * @returns An observable that emits when the request finishes.
+     */
+    deleteDevice(uid: string, duid: number): Observable<any> {
+        return this._http.delete(this._urlService.deviceDelete(uid, duid));
+    }
 }
