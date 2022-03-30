@@ -64,17 +64,22 @@ export class GlobalDrawerService {
     }
 
     /**
-     * Opens a drawer with a form to edit a device
-     * using the NzDrawerService.
+     *
+     * @param param0
+     * @param device
+     * @returns
      */
-    openEditDeviceForm(device: Device): NzDrawerRef<DeviceFormComponent, any> {
+    openEditDeviceForm(
+        gateway: Gateway,
+        device: Device
+    ): NzDrawerRef<DeviceFormComponent, boolean> {
         return this._drawerService.create<
             DeviceFormComponent,
-            { device: Device },
-            any
+            { device: Device; gatewayUid: string },
+            boolean
         >({
             nzContent: DeviceFormComponent,
-            nzContentParams: { device },
+            nzContentParams: { device, gatewayUid: gateway.uid },
             nzTitle: 'Edit device',
             nzMaskClosable: false,
             nzWidth: DRAWER_WITH,

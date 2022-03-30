@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DeviceToUpdate } from '../../models/device-to-update.model';
-import { GatewayToUpdate } from '../../models/gateway-to-update.model';
 import {
     Device,
     DeviceToCreate,
+    DeviceToUpdate,
     Gateway,
     GatewayToCreate,
+    GatewayToUpdate,
 } from '../../models/models';
 import { ApiMasterUrlService } from '../api-master-url.service';
 
@@ -105,9 +105,12 @@ export class GatewayApiService {
      */
     putDevice(
         uid: string,
-        duid: string,
+        duid: number,
         deviceToUpdate: DeviceToUpdate
     ): Observable<any> {
-        return this._http.put(this._urlService.devicePut(uid, duid), deviceToUpdate);
+        return this._http.put(
+            this._urlService.devicePut(uid, duid),
+            deviceToUpdate
+        );
     }
 }

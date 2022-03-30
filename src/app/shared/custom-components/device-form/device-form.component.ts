@@ -8,6 +8,7 @@ import {
     Device,
     DeviceStatus,
     DeviceToCreate,
+    DeviceToUpdate,
 } from 'src/app/core/models/models';
 
 @Component({
@@ -71,6 +72,16 @@ export class DeviceFormComponent implements OnInit {
                 const deviceToCreate: DeviceToCreate = this.form.value;
                 this._gatewayApiService
                     .postDevice(this.gatewayUid, deviceToCreate)
+                    .pipe(take(1))
+                    .subscribe((_) => this._drawerRef.close(true));
+            } else {
+                const deviceToUpdate: DeviceToUpdate = this.form.value;
+                this._gatewayApiService
+                    .putDevice(
+                        this.gatewayUid,
+                        this.device!.uid,
+                        deviceToUpdate
+                    )
                     .pipe(take(1))
                     .subscribe((_) => this._drawerRef.close(true));
             }

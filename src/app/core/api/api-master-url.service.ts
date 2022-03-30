@@ -17,6 +17,6 @@ export class ApiMasterUrlService {
         `${environment.apiUrl}/gateways/${uid}/devices`;
     readonly devicePost = (uid: string) =>
         `${environment.apiUrl}/gateways/${uid}/devices`;
-    readonly devicePut = (uid: string, duid: string) =>
+    readonly devicePut = (uid: string, duid: number) =>
         `${environment.apiUrl}/gateways/${uid}/devices/${duid}`;
 }

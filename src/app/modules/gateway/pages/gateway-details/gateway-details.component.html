@@ -91,6 +91,6 @@
         [hasTitle]="false"
         [showActions]="true"
         [loading]="!!(loading$ | async) || !!(devicesLoading$ | async)"
-        (editRequested)="openEditDeviceForm($event)"
+        (editRequested)="requestToEditDevice($event)"
     ></app-device-table>
 </nz-card>

@@ -11,6 +11,7 @@ import {
     switchMap,
     switchMapTo,
     tap,
+    withLatestFrom,
 } from 'rxjs/operators';
 import { GatewayApiService } from 'src/app/core/api/gateway/gateway-api.service';
 import { Device, Gateway } from 'src/app/core/models/models';
@@ -39,6 +40,7 @@ export class GatewayDetailsComponent implements OnInit {
     private readonly _updateGatewayRequest = new Subject<Gateway>();
     private readonly _deleteGatewayRequest = new Subject<Gateway>();
     private readonly _createDeviceRequest = new Subject<Gateway>();
+    private readonly _editDeviceRequest = new Subject<Device>();
 
     constructor(
         private _globalDrawerService: GlobalDrawerService,
@@ -120,9 +122,18 @@ export class GatewayDetailsComponent implements OnInit {
             switchMap(this._openCreateDeviceForm)
         );
 
+        // Open a drawer with the edit device form every time it is requested.
+        // When the form is closed it will return a boolean that indicates whether
+        // or not the device was edited.
+        const afterEditClose$ = this._editDeviceRequest.pipe(
+            withLatestFrom(this.gateway$),
+            switchMap(this._openEditDeviceForm)
+        );
+
         // From this an observable will be created that emits
         // whenever is needed to reload the devices list.
-        const reloadDevices$ = afterClose$.pipe(
+        const reloadDevices$ = from([afterEditClose$, afterClose$]).pipe(
+            mergeAll(),
             filter<boolean>(Boolean),
             shareReplay(1)
         );
@@ -181,10 +192,11 @@ export class GatewayDetailsComponent implements OnInit {
     }
 
     /**
-     * Opens a drawer with the form to edit a device for the current
-     * gateway. */
-    openEditDeviceForm(device: Device): void {
-        const ref = this._globalDrawerService.openEditDeviceForm(device);
+     * Request to edit an existing device.
+     * @param device The device to update.
+     */
+    requestToEditDevice(device: Device): void {
+        this._editDeviceRequest.next(device);
     }
 
     private readonly _openEditGatewayForm = (gateway: Gateway) =>
@@ -201,4 +213,11 @@ export class GatewayDetailsComponent implements OnInit {
 
     private readonly _openCreateDeviceForm = (gateway: Gateway) =>
         this._globalDrawerService.openCreateDeviceForm(gateway).afterClose;
+
+    private readonly _openEditDeviceForm = ([device, gateway]: [
+        Device,
+        Gateway
+    ]) =>
+        this._globalDrawerService.openEditDeviceForm(gateway, device)
+            .afterClose;
 }
