@@ -92,5 +92,6 @@
         [showActions]="true"
         [loading]="!!(loading$ | async) || !!(devicesLoading$ | async)"
         (editRequested)="requestToEditDevice($event)"
+        (deleteRequested)="requestToDeleteDevice($event)"
     ></app-device-table>
 </nz-card>

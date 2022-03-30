@@ -37,10 +37,11 @@ export class GatewayDetailsComponent implements OnInit {
     /** Emits the uid of the gateway gotten from the route. */
     gatewayUid$!: Observable<string>;
 
-    private readonly _updateGatewayRequest = new Subject<Gateway>();
+    private readonly _editGatewayRequest = new Subject<Gateway>();
     private readonly _deleteGatewayRequest = new Subject<Gateway>();
     private readonly _createDeviceRequest = new Subject<Gateway>();
     private readonly _editDeviceRequest = new Subject<Device>();
+    private readonly _deleteDeviceRequest = new Subject<Device>();
 
     constructor(
         private _globalDrawerService: GlobalDrawerService,
@@ -59,13 +60,13 @@ export class GatewayDetailsComponent implements OnInit {
         // Open a drawer with the edit gateway form every time it is requested.
         // When the form is closed it will return a boolean that indicates whether
         // or not the gateway was updated.
-        const afterClose$ = this._updateGatewayRequest.pipe(
+        const afterEditClose$ = this._editGatewayRequest.pipe(
             switchMap(this._openEditGatewayForm)
         );
 
         // From this an observable will be created that emits
         // whenever is needed to re-fetch the gateway.
-        const reloadGateway$ = afterClose$.pipe(
+        const reloadGateway$ = afterEditClose$.pipe(
             filter<boolean>(Boolean),
             shareReplay(1)
         );
@@ -118,7 +119,7 @@ export class GatewayDetailsComponent implements OnInit {
         // Open a drawer with the create device form every time it is requested.
         // When the form is closed it will return a boolean that indicates whether
         // or not the device was created.
-        const afterClose$ = this._createDeviceRequest.pipe(
+        const afterCreateClose$ = this._createDeviceRequest.pipe(
             switchMap(this._openCreateDeviceForm)
         );
 
@@ -130,13 +131,20 @@ export class GatewayDetailsComponent implements OnInit {
             switchMap(this._openEditDeviceForm)
         );
 
+        // Emits when a device is deleted.
+        const afterDeviceDelete$ = this._deleteDeviceRequest.pipe(
+            withLatestFrom(this.gateway$),
+            switchMap(this._deleteDevice),
+            mapTo(true)
+        );
+
         // From this an observable will be created that emits
         // whenever is needed to reload the devices list.
-        const reloadDevices$ = from([afterEditClose$, afterClose$]).pipe(
-            mergeAll(),
-            filter<boolean>(Boolean),
-            shareReplay(1)
-        );
+        const reloadDevices$ = from([
+            afterCreateClose$,
+            afterEditClose$,
+            afterDeviceDelete$,
+        ]).pipe(mergeAll(), filter<boolean>(Boolean), shareReplay(1));
 
         // There are two ways to get the devices, from the gateway itself
         // and from a dedicated API. In this observable we get the devices
@@ -157,14 +165,18 @@ export class GatewayDetailsComponent implements OnInit {
         // Indicates that a request to load the devices has started.
         const loadStarts$ = reloadDevices$.pipe(mapTo(true));
 
+        // Indicates that a request to delete a device has started.
+        const deleteStarts$ = this._deleteDeviceRequest.pipe(mapTo(true));
+
         // Indicates that a request to load the devices has ended.
         const loadEnds$ = this.devices$.pipe(mapTo(false));
 
         // Build the loading state that indicates if the devices are being fetched.
-        this.devicesLoading$ = from([loadStarts$, loadEnds$]).pipe(
-            mergeAll(),
-            shareReplay(1)
-        );
+        this.devicesLoading$ = from([
+            loadStarts$,
+            deleteStarts$,
+            loadEnds$,
+        ]).pipe(mergeAll(), shareReplay(1));
     }
 
     /**
@@ -172,7 +184,7 @@ export class GatewayDetailsComponent implements OnInit {
      * @param gateway The gateway to update.
      */
     requestToEditGateway(gateway: Gateway): void {
-        this._updateGatewayRequest.next(gateway);
+        this._editGatewayRequest.next(gateway);
     }
 
     /**
@@ -199,6 +211,14 @@ export class GatewayDetailsComponent implements OnInit {
         this._editDeviceRequest.next(device);
     }
 
+    /**
+     * Request to delete an existing device.
+     * @param device The device to delete.
+     */
+    requestToDeleteDevice(device: Device): void {
+        this._deleteDeviceRequest.next(device);
+    }
+
     private readonly _openEditGatewayForm = (gateway: Gateway) =>
         this._globalDrawerService.openEditGatewayForm(gateway).afterClose;
 
@@ -220,4 +240,7 @@ export class GatewayDetailsComponent implements OnInit {
     ]) =>
         this._globalDrawerService.openEditDeviceForm(gateway, device)
             .afterClose;
+
+    private readonly _deleteDevice = ([device, gateway]: [Device, Gateway]) =>
+        this._gatewayApiService.deleteDevice(gateway.uid, device.uid);
 }
