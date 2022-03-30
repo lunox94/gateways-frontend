@@ -49,46 +49,20 @@ export class GatewayDetailsComponent implements OnInit {
     ngOnInit(): void {
         this._setUpGatewayStateManagement();
 
-        const afterClose$ = this._createDeviceRequest.pipe(
-            switchMap(this._openCreateDeviceForm)
-        );
-
-        const reloadDevices$ = afterClose$.pipe(
-            filter<boolean>(Boolean),
-            shareReplay(1)
-        );
-
-        const devices$ = this.gateway$.pipe(map((g) => g.devices));
-
-        const devicesReloaded$ = reloadDevices$.pipe(
-            switchMapTo(this.gatewayUid$),
-            switchMap(this._getAllDevices)
-        );
-
-        this.devices$ = merge(devices$, devicesReloaded$).pipe(shareReplay(1));
-
-        const loadStarts$ = reloadDevices$.pipe(mapTo(true));
-
-        const loadEnds$ = this.devices$.pipe(mapTo(false));
-
-        this.devicesLoading$ = merge(loadStarts$, loadEnds$).pipe(
-            shareReplay(1)
-        );
-
-        // const loadEnds$ = reloadDevices$.pipe(mapTo(false));
+        this._setUpDevicesStateManagement();
     }
 
     private _setUpGatewayStateManagement() {
         // Open a drawer with the edit gateway form every time it is requested.
         // When the form is closed it will return a boolean that indicates whether
         // or not the gateway was updated.
-        const afterUpdateGatewayClose$ = this._updateGatewayRequest.pipe(
+        const afterClose$ = this._updateGatewayRequest.pipe(
             switchMap(this._openEditGatewayForm)
         );
 
         // From this an observable will be created that emits
         // whenever is needed to re-fetch the gateway.
-        const reloadGateway$ = afterUpdateGatewayClose$.pipe(
+        const reloadGateway$ = afterClose$.pipe(
             filter<boolean>(Boolean),
             shareReplay(1)
         );
@@ -135,6 +109,49 @@ export class GatewayDetailsComponent implements OnInit {
             loadEnds$,
             deleteEnd$
         ).pipe(shareReplay(1));
+    }
+
+    private _setUpDevicesStateManagement() {
+        // Open a drawer with the create device form every time it is requested.
+        // When the form is closed it will return a boolean that indicates whether
+        // or not the device was created.
+        const afterClose$ = this._createDeviceRequest.pipe(
+            switchMap(this._openCreateDeviceForm)
+        );
+
+        // From this an observable will be created that emits
+        // whenever is needed to reload the devices list.
+        const reloadDevices$ = afterClose$.pipe(
+            filter<boolean>(Boolean),
+            shareReplay(1)
+        );
+
+        // There are two ways to get the devices, from the gateway itself
+        // and from a dedicated API. In this observable we get the devices
+        // from the gateway.
+        const devices$ = this.gateway$.pipe(map((g) => g.devices));
+
+        // In this observable we get the devices from the dedicated API.
+        // The observable will emit every time a request to load the devices
+        // is emited.
+        const devicesReloaded$ = reloadDevices$.pipe(
+            switchMapTo(this.gatewayUid$),
+            switchMap(this._getAllDevices)
+        );
+
+        // Build the final observable with the devices from the two sources.
+        this.devices$ = merge(devices$, devicesReloaded$).pipe(shareReplay(1));
+
+        // Indicates that a request to load the devices has started.
+        const loadStarts$ = reloadDevices$.pipe(mapTo(true));
+
+        // Indicates that a request to load the devices has ended.
+        const loadEnds$ = this.devices$.pipe(mapTo(false));
+
+        // Build the loading state that indicates if the devices are being fetched.
+        this.devicesLoading$ = merge(loadStarts$, loadEnds$).pipe(
+            shareReplay(1)
+        );
     }
 
     /**
