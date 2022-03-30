@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Gateway } from '../../models/models';
+import { Gateway, GatewayToCreate } from '../../models/models';
 import { ApiMasterUrlService } from '../api-master-url.service';
 
 @Injectable({
@@ -28,5 +28,12 @@ export class GatewayApiService {
      */
     get(uid: string): Observable<Gateway> {
         return this._http.get<Gateway>(this._urlService.gatewayGet(uid));
+    }
+
+    post(gatewayToCreate: GatewayToCreate): Observable<Gateway> {
+        return this._http.post<Gateway>(
+            this._urlService.gatewayPost(),
+            gatewayToCreate
+        );
     }
 }

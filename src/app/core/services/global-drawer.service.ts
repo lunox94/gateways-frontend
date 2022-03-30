@@ -14,7 +14,7 @@ export class GlobalDrawerService {
      * Opens a drawer with a form to create a gateway using
      * the NzDrawerService.
      */
-    openCreateGatewayForm(): NzDrawerRef<GatewayFormComponent, any> {
+    openCreateGatewayForm(): NzDrawerRef<GatewayFormComponent, boolean> {
         return this._drawerService.create({
             nzContent: GatewayFormComponent,
             nzTitle: 'Create gateway',

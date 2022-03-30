@@ -2,7 +2,12 @@
     <h2 nz-typography>Gateways</h2>
 
     <!-- Actions -->
-    <a nz-button nzType="text" nzSize="large" (click)="openCreateForm()">
+    <a
+        nz-button
+        nzType="text"
+        nzSize="large"
+        (click)="requestToCreateNewGateway()"
+    >
         <i nz-icon nzType="plus" class="text-blue-500"></i>
         Create
     </a>
@@ -11,6 +16,6 @@
 
     <app-gateway-table
         [gatewayList]="(gateways$ | async) ?? []"
-        [loading]="!(gateways$ | async)"
+        [loading]="!!(loading$ | async)"
     ></app-gateway-table>
 </div>

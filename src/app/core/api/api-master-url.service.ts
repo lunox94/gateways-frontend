@@ -8,4 +8,5 @@ export class ApiMasterUrlService {
     readonly gatewayGetAll = () => `${environment.apiUrl}/gateways`;
     readonly gatewayGet = (uid: string) =>
         `${environment.apiUrl}/gateways/${uid}`;
+    readonly gatewayPost = () => `${environment.apiUrl}/gateways`;
 }
