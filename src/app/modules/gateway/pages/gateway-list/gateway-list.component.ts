@@ -20,7 +20,9 @@ export class GatewayListComponent implements OnInit {
      */
     loading$!: Observable<boolean>;
 
+    /** Used to emit a request to open the form to create a gateway. */
     private readonly _createGatewayRequest = new Subject();
+    /** Used to emit a request to delete a gateway. */
     private readonly _deleteGatewayRequest = new Subject<Gateway>();
 
     constructor(
@@ -70,6 +72,10 @@ export class GatewayListComponent implements OnInit {
         this._createGatewayRequest.next();
     }
 
+    /**
+     * Requests to delete a gateway.
+     * @param gateway The gateway to delete.
+     */
     requestToDeleteGateway(gateway: Gateway): void {
         this._deleteGatewayRequest.next(gateway);
     }
