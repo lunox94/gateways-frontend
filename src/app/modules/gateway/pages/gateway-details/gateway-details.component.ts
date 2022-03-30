@@ -81,12 +81,13 @@ export class GatewayDetailsComponent implements OnInit {
         // Indicates that a request to load the gateway has started.
         const loadStarts$ = reloadGateway$.pipe(startWith(true), mapTo(true));
 
-        // Indicates that a request to delete the gateway has started.
+        // Indicates that a request to delete the current gateway has started.
         const deleteStarts$ = this._deleteGatewayRequest.pipe(mapTo(true));
 
         // Indicates that a request to load the gateway has ended.
         const loadEnds$ = this.gateway$.pipe(mapTo(false));
 
+        // Indicates that a request to delete the current gateway has ended.
         const deleteEnd$ = afterGatewayDelete$.pipe(
             tap((_) => this._router.navigate(['gateways'])),
             mapTo(false)
