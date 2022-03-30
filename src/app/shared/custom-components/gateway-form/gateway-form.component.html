@@ -64,6 +64,13 @@
         >
             Submit
         </button>
-        <button nz-button (click)="close()" type="button">Cancel</button>
+        <button
+            nz-button
+            type="button"
+            (click)="close()"
+            [disabled]="loading$ | async"
+        >
+            Cancel
+        </button>
     </div>
 </form>
