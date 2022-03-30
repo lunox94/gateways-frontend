@@ -74,7 +74,13 @@
     </div>
 
     <!-- Device actions -->
-    <a nz-button nzType="text" nzSize="large" (click)="openCreateDeviceForm()">
+    <a
+        *ngIf="gateway$ | async as gateway"
+        nz-button
+        nzType="text"
+        nzSize="large"
+        (click)="requestToCreateDevice(gateway)"
+    >
         <i nz-icon nzType="plus" class="text-blue-500"></i>
         Create
     </a>
@@ -84,7 +90,7 @@
         [bordered]="true"
         [hasTitle]="false"
         [showActions]="true"
-        [loading]="!!(loading$ | async)"
+        [loading]="!!(loading$ | async) || !!(devicesLoading$ | async)"
         (editRequested)="openEditDeviceForm($event)"
     ></app-device-table>
 </nz-card>

@@ -26,11 +26,14 @@ export class GatewayDetailsComponent implements OnInit {
     /** Emits a component-scoped loading state. */
     loading$!: Observable<boolean>;
 
+    devicesLoading$!: Observable<boolean>;
+
     /** Emits the uid of the gateway gotten from the route. */
     gatewayUid$!: Observable<string>;
 
     private readonly _updateGatewayRequest = new Subject<Gateway>();
     private readonly _deleteGatewayRequest = new Subject<Gateway>();
+    private readonly _createDeviceRequest = new Subject<Gateway>();
 
     constructor(
         private _globalDrawerService: GlobalDrawerService,
@@ -41,6 +44,21 @@ export class GatewayDetailsComponent implements OnInit {
 
     ngOnInit(): void {
         this._setUpGatewayStateManagement();
+
+        const afterClose$ = this._createDeviceRequest.pipe(
+            switchMap(this._openCreateDeviceForm)
+        );
+
+        const reloadDevices$ = afterClose$.pipe(
+            filter<boolean>(Boolean),
+            shareReplay(1)
+        );
+
+        const loadStarts$ = reloadDevices$.pipe(mapTo(true));
+
+        this.devicesLoading$ = merge(loadStarts$).pipe(shareReplay(1));
+
+        // const loadEnds$ = reloadDevices$.pipe(mapTo(false));
     }
 
     private _setUpGatewayStateManagement() {
@@ -106,7 +124,7 @@ export class GatewayDetailsComponent implements OnInit {
      * Requests to open a drawer with the edit gateway form.
      * @param gateway The gateway to update.
      */
-    requestToEditGateway(gateway: Gateway) {
+    requestToEditGateway(gateway: Gateway): void {
         this._updateGatewayRequest.next(gateway);
     }
 
@@ -119,12 +137,11 @@ export class GatewayDetailsComponent implements OnInit {
     }
 
     /**
-     * Opens a drawer with the form to create a device for the current
-     * gateway. */
-    openCreateDeviceForm(): void {
-        // const ref = this._globalDrawerService.openCreateDeviceForm(
-        //     this.gateway!
-        // );
+     * Request to create a new device on the gateway.
+     * @param gateway The gateway that will own the device.
+     */
+    requestToCreateDevice(gateway: Gateway): void {
+        this._createDeviceRequest.next(gateway);
     }
 
     /**
@@ -142,4 +159,7 @@ export class GatewayDetailsComponent implements OnInit {
 
     private readonly _deleteGateway = ({ uid }: Gateway) =>
         this._gatewayApiService.delete(uid);
+
+    private readonly _openCreateDeviceForm = (gateway: Gateway) =>
+        this._globalDrawerService.openCreateDeviceForm(gateway).afterClose;
 }

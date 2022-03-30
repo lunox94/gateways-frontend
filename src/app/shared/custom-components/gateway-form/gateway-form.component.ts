@@ -52,7 +52,7 @@ export class GatewayFormComponent implements OnInit {
 
     /** Closes the drawer. */
     close(): void {
-        this._drawerRef.close();
+        this._drawerRef.close(false);
     }
 
     /** Called when the submit but is clicked. */

@@ -49,11 +49,11 @@ export class GlobalDrawerService {
      */
     openCreateDeviceForm(
         gateway: Gateway
-    ): NzDrawerRef<DeviceFormComponent, any> {
+    ): NzDrawerRef<DeviceFormComponent, boolean> {
         return this._drawerService.create<
             DeviceFormComponent,
             { gatewayUid: string },
-            any
+            boolean
         >({
             nzContent: DeviceFormComponent,
             nzContentParams: { gatewayUid: gateway.uid },
