@@ -23,9 +23,13 @@ export class GatewayDetailsComponent implements OnInit {
     /** Emits the current gateway when loads the first time and on every update. */
     gateway$!: Observable<Gateway>;
 
+    /** Emits the list of devices the current gateway owns. */
+    devices$!: Observable<Device[]>;
+
     /** Emits a component-scoped loading state. */
     loading$!: Observable<boolean>;
 
+    /** Emits a loading state that indicates if the devices are being loading. */
     devicesLoading$!: Observable<boolean>;
 
     /** Emits the uid of the gateway gotten from the route. */
@@ -54,9 +58,22 @@ export class GatewayDetailsComponent implements OnInit {
             shareReplay(1)
         );
 
+        const devices$ = this.gateway$.pipe(map((g) => g.devices));
+
+        const devicesReloaded$ = reloadDevices$.pipe(
+            switchMapTo(this.gatewayUid$),
+            switchMap(this._getAllDevices)
+        );
+
+        this.devices$ = merge(devices$, devicesReloaded$).pipe(shareReplay(1));
+
         const loadStarts$ = reloadDevices$.pipe(mapTo(true));
 
-        this.devicesLoading$ = merge(loadStarts$).pipe(shareReplay(1));
+        const loadEnds$ = this.devices$.pipe(mapTo(false));
+
+        this.devicesLoading$ = merge(loadStarts$, loadEnds$).pipe(
+            shareReplay(1)
+        );
 
         // const loadEnds$ = reloadDevices$.pipe(mapTo(false));
     }
@@ -159,6 +176,9 @@ export class GatewayDetailsComponent implements OnInit {
 
     private readonly _deleteGateway = ({ uid }: Gateway) =>
         this._gatewayApiService.delete(uid);
+
+    private readonly _getAllDevices = (uid: string) =>
+        this._gatewayApiService.getAllDevices(uid);
 
     private readonly _openCreateDeviceForm = (gateway: Gateway) =>
         this._globalDrawerService.openCreateDeviceForm(gateway).afterClose;

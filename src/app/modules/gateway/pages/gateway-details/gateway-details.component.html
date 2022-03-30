@@ -67,8 +67,8 @@
 <nz-card>
     <div class="font-bold text-base mb-2 flex flex-row">
         <span>Devices&nbsp;</span>
-        <span *ngIf="gateway$ | async as gateway">
-            ({{ gateway.devices.length }})
+        <span *ngIf="devices$ | async as devices">
+            ({{ devices.length }})
         </span>
         <span *ngIf="!(gateway$ | async)">(-)</span>
     </div>
@@ -86,7 +86,7 @@
     </a>
 
     <app-device-table
-        [deviceList]="(gateway$ | async)?.devices ?? []"
+        [deviceList]="(devices$ | async) ?? []"
         [bordered]="true"
         [hasTitle]="false"
         [showActions]="true"

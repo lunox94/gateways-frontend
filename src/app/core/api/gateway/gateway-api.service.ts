@@ -71,6 +71,15 @@ export class GatewayApiService {
     }
 
     /**
+     * Gets all the devices for a gateway given its uid.
+     * @param uid The uid of the gateway that owns the devices.
+     * @returns The list of devices for the given gateway.
+     */
+    getAllDevices(uid: string): Observable<Device[]> {
+        return this._http.get<Device[]>(this._urlService.deviceGetAll(uid));
+    }
+
+    /**
      * Creates a new device.
      * @param uid The uid of the gateway that will own the device.
      * @param deviceToCreate Data to create the device.

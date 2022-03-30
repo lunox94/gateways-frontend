@@ -13,6 +13,8 @@ export class ApiMasterUrlService {
         `${environment.apiUrl}/gateways/${uid}`;
     readonly gatewayDelete = (uid: string) =>
         `${environment.apiUrl}/gateways/${uid}`;
+    readonly deviceGetAll = (uid: string) =>
+        `${environment.apiUrl}/gateways/${uid}/devices`;
     readonly devicePost = (uid: string) =>
         `${environment.apiUrl}/gateways/${uid}/devices`;
 }
