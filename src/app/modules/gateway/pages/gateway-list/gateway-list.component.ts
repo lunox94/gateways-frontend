@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { merge, Observable, Subject } from 'rxjs';
+import { from, merge, Observable, Subject } from 'rxjs';
 import {
     filter,
     mapTo,
+    mergeAll,
     shareReplay,
     startWith,
     switchMap,
@@ -71,7 +72,10 @@ export class GatewayListComponent implements OnInit {
         const loadEnds$ = this.gateways$.pipe(mapTo(false));
 
         // Build the loading state.
-        this.loading$ = merge(loadStarts$, loadEnds$).pipe(shareReplay(1));
+        this.loading$ = from([loadStarts$, loadEnds$]).pipe(
+            mergeAll(),
+            shareReplay(1)
+        );
     }
 
     /** Requests to open a drawer with the create gateway form. */

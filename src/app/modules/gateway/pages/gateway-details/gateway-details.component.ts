@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { merge, Observable, Subject } from 'rxjs';
+import { from, merge, Observable, Subject } from 'rxjs';
 import {
     filter,
     map,
     mapTo,
+    mergeAll,
     shareReplay,
     startWith,
     switchMap,
@@ -97,18 +98,18 @@ export class GatewayDetailsComponent implements OnInit {
         const loadEnds$ = this.gateway$.pipe(mapTo(false));
 
         // Indicates that a request to delete the current gateway has ended.
-        const deleteEnd$ = afterGatewayDelete$.pipe(
+        const deleteEnds$ = afterGatewayDelete$.pipe(
             tap((_) => this._router.navigate(['gateways'])),
             mapTo(false)
         );
 
         // Build the loading state that indicates if the gateway is being fetched.
-        this.loading$ = merge(
+        this.loading$ = from([
             loadStarts$,
             deleteStarts$,
             loadEnds$,
-            deleteEnd$
-        ).pipe(shareReplay(1));
+            deleteEnds$,
+        ]).pipe(mergeAll(), shareReplay(1));
     }
 
     private _setUpDevicesStateManagement() {
@@ -149,7 +150,8 @@ export class GatewayDetailsComponent implements OnInit {
         const loadEnds$ = this.devices$.pipe(mapTo(false));
 
         // Build the loading state that indicates if the devices are being fetched.
-        this.devicesLoading$ = merge(loadStarts$, loadEnds$).pipe(
+        this.devicesLoading$ = from([loadStarts$, loadEnds$]).pipe(
+            mergeAll(),
             shareReplay(1)
         );
     }
