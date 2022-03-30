@@ -44,6 +44,7 @@ export class GatewayListComponent implements OnInit {
             switchMap(this._openDrawer)
         );
 
+        // Emits when a gateway was deleted.
         const afterGatewayDelete$ = this._deleteGatewayRequest.pipe(
             switchMap(this._deleteGateway),
             mapTo(true)
