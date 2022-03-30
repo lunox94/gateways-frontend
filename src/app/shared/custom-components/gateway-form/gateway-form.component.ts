@@ -2,14 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { from, Observable, Subject } from 'rxjs';
-import {
-    mapTo,
-    mergeAll,
-    shareReplay,
-    switchMap,
-    take,
-    tap,
-} from 'rxjs/operators';
+import { mapTo, mergeAll, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { GatewayApiService } from 'src/app/core/api/gateway/gateway-api.service';
 import {
     Gateway,
