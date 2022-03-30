@@ -2,7 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GatewayToUpdate } from '../../models/gateway-to-update.model';
-import { Gateway, GatewayToCreate } from '../../models/models';
+import {
+    Device,
+    DeviceToCreate,
+    Gateway,
+    GatewayToCreate,
+} from '../../models/models';
 import { ApiMasterUrlService } from '../api-master-url.service';
 
 @Injectable({
@@ -50,7 +55,10 @@ export class GatewayApiService {
      * @returns An observable that emits once the request finishes.
      */
     put(uid: string, gatewayToUpdate: GatewayToUpdate): Observable<any> {
-        return this._http.put(this._urlService.gatewayPut(uid), gatewayToUpdate);
+        return this._http.put(
+            this._urlService.gatewayPut(uid),
+            gatewayToUpdate
+        );
     }
 
     /**
@@ -60,5 +68,21 @@ export class GatewayApiService {
      */
     delete(uid: string): Observable<any> {
         return this._http.delete(this._urlService.gatewayDelete(uid));
+    }
+
+    /**
+     * Creates a new device.
+     * @param uid The uid of the gateway that will own the device.
+     * @param deviceToCreate Data to create the device.
+     * @returns An observable that contains the newly created device.
+     */
+    postDevice(
+        uid: string,
+        deviceToCreate: DeviceToCreate
+    ): Observable<Device> {
+        return this._http.post<Device>(
+            this._urlService.devicePost(uid),
+            deviceToCreate
+        );
     }
 }
