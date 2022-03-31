@@ -10,6 +10,13 @@ const statusPagesRoutes: Route[] = [
                 (m) => m.ServerErrorModule
             ),
     },
+    {
+        path: 'not-found',
+        loadChildren: () =>
+            import('./pages/not-found/not-found.module').then(
+                (m) => m.NotFoundModule
+            ),
+    },
 ];
 
 @NgModule({

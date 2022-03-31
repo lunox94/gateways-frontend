@@ -25,9 +25,15 @@ export class GlobalErrorHandlingInterceptor implements HttpInterceptor {
     ): Observable<HttpEvent<any>> {
         return next.handle(req).pipe(
             catchError((error) => {
+                // just doing a very simple error handling
                 if (error instanceof HttpErrorResponse) {
-                    this._drawerService.drawerRef?.close();
-                    this._router.navigate(['status', 'server-error']);
+                    if (error.status == 404) {
+                        this._drawerService.drawerRef?.close();
+                        this._router.navigate(['status', 'not-found']);
+                    } else {
+                        this._drawerService.drawerRef?.close();
+                        this._router.navigate(['status', 'server-error']);
+                    }
                 }
                 return throwError(error);
             })
