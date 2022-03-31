@@ -8,6 +8,8 @@ const DRAWER_WITH = 520;
 
 @Injectable()
 export class GlobalDrawerService {
+    drawerRef?: NzDrawerRef<any, any>;
+
     constructor(private _drawerService: NzDrawerService) {}
 
     /**
@@ -50,7 +52,7 @@ export class GlobalDrawerService {
     openCreateDeviceForm(
         gateway: Gateway
     ): NzDrawerRef<DeviceFormComponent, boolean> {
-        return this._drawerService.create<
+        return (this.drawerRef = this._drawerService.create<
             DeviceFormComponent,
             { gatewayUid: string },
             boolean
@@ -60,7 +62,7 @@ export class GlobalDrawerService {
             nzTitle: 'Create device',
             nzMaskClosable: false,
             nzWidth: DRAWER_WITH,
-        });
+        }));
     }
 
     /**

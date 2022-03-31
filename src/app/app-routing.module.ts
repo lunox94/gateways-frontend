@@ -10,6 +10,13 @@ const routes: Routes = [
             ),
     },
     {
+        path: 'status',
+        loadChildren: () =>
+            import('./modules/status-pages/status-pages.module').then(
+                (m) => m.StatusPagesModule
+            ),
+    },
+    {
         path: '**',
         redirectTo: 'gateways',
     },

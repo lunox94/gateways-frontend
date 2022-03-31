@@ -7,10 +7,12 @@ import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { en_US } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxMaskModule } from 'ngx-mask';
+import { GlobalErrorHandlingInterceptor } from './core/interceptors/global-error-handling.interceptor';
+import { GlobalDrawerModule } from './core/services/global-drawer.module';
 
 registerLocaleData(en);
 
@@ -20,13 +22,22 @@ registerLocaleData(en);
         BrowserModule,
         AppRoutingModule,
         FormsModule,
+        ReactiveFormsModule,
         HttpClientModule,
         BrowserAnimationsModule,
+        GlobalDrawerModule,
 
         // 3rd party modules that require global forRoot initialization
         NgxMaskModule.forRoot(),
     ],
-    providers: [{ provide: NZ_I18N, useValue: en_US }],
+    providers: [
+        { provide: NZ_I18N, useValue: en_US },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: GlobalErrorHandlingInterceptor,
+            multi: true,
+        },
+    ],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

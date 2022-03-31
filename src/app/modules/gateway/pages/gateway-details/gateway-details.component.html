@@ -77,12 +77,10 @@
 
     <!-- Device actions -->
     <button
-        *ngIf="gateway$ | async as gateway"
         nz-button
         nzType="text"
         nzSize="large"
         (click)="requestToCreateDevice()"
-        [disabled]="gateway.devices.length >= 10"
     >
         <i nz-icon nzType="plus" class="text-blue-500"></i>
         Create

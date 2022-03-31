@@ -6,3 +6,7 @@
 .anticon {
     vertical-align: 0.09em;
 }
+
+.ant-result-icon svg {
+    display: inline;
+}
