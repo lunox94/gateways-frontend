@@ -17,7 +17,7 @@
 <div class="text-xs mb-4 text-gray-500">Gateway</div>
 
 <!-- Gateway actions -->
-<div class="flex flex-row" *ngIf="gateway$ | async as gateway">
+<div class="flex flex-row">
     <a
         nz-button
         nzType="text"
@@ -25,7 +25,8 @@
         nz-popconfirm
         nzPopconfirmTitle="Are you sure to delete this gateway?"
         nzPopconfirmPlacement="right"
-        (nzOnConfirm)="requestToDeleteGateway(gateway)"
+        (nzOnConfirm)="requestToDeleteGateway()"
+        [disabled]="loading$ | async"
     >
         <i nz-icon nzType="delete" class="text-blue-500"></i>
         Delete
@@ -34,7 +35,8 @@
         nz-button
         nzType="text"
         nzSize="large"
-        (click)="requestToEditGateway(gateway)"
+        (click)="requestToEditGateway()"
+        [disabled]="loading$ | async"
     >
         <i nz-icon nzType="edit" class="text-blue-500"></i>
         Edit
@@ -79,7 +81,7 @@
         nz-button
         nzType="text"
         nzSize="large"
-        (click)="requestToCreateDevice(gateway)"
+        (click)="requestToCreateDevice()"
     >
         <i nz-icon nzType="plus" class="text-blue-500"></i>
         Create
