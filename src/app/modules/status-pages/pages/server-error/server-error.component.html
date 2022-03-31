@@ -1,9 +1,5 @@
-<nz-result
-    nzStatus="500"
-    nzTitle="500"
-    nzSubTitle="Sorry, there is an error on server."
->
+<nz-result nzStatus="500" nzTitle="500" [nzSubTitle]="getErrorMessage()">
     <div nz-result-extra>
-        <a nz-button nzType="primary" [routerLink]="'/'">Back Home</a>
+        <a nz-button nzType="primary" [routerLink]="'/'">Back home</a>
     </div>
 </nz-result>
