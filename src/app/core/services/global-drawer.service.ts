@@ -15,24 +15,27 @@ export class GlobalDrawerService {
     /**
      * Opens a drawer with a form to create a gateway using
      * the NzDrawerService.
+     * @returns A reference to the drawer.
      */
     openCreateGatewayForm(): NzDrawerRef<GatewayFormComponent, boolean> {
-        return this._drawerService.create({
+        return (this.drawerRef = this._drawerService.create({
             nzContent: GatewayFormComponent,
             nzTitle: 'Create gateway',
             nzMaskClosable: false,
             nzWidth: DRAWER_WITH,
-        });
+        }));
     }
 
     /**
      * Opens a drawer with a form to edit a gateway using
      * the NzDrawerService.
+     * @param gateway The gateway to edit.
+     * @returns A reference to the drawer.
      */
     openEditGatewayForm(
         gateway: Gateway
     ): NzDrawerRef<GatewayFormComponent, any> {
-        return this._drawerService.create<
+        return (this.drawerRef = this._drawerService.create<
             GatewayFormComponent,
             { gateway: Gateway },
             any
@@ -42,12 +45,14 @@ export class GlobalDrawerService {
             nzTitle: 'Edit gateway',
             nzMaskClosable: false,
             nzWidth: DRAWER_WITH,
-        });
+        }));
     }
 
     /**
      * Opens a drawer with a form to create a device
      * for the given gateway using the NzDrawerService.
+     * @param gateway The gateway that will own the device.
+     * @returns A reference to the drawer.
      */
     openCreateDeviceForm(
         gateway: Gateway
@@ -66,16 +71,17 @@ export class GlobalDrawerService {
     }
 
     /**
-     *
-     * @param param0
-     * @param device
-     * @returns
+     * Opens a drawer with a form to edit an existing device
+     * using the NzDrawerService.
+     * @param gateway The gateway that owns the device.
+     * @param device The device to edit.
+     * @returns A reference to the drawer.
      */
     openEditDeviceForm(
         gateway: Gateway,
         device: Device
     ): NzDrawerRef<DeviceFormComponent, boolean> {
-        return this._drawerService.create<
+        return (this.drawerRef = this._drawerService.create<
             DeviceFormComponent,
             { device: Device; gatewayUid: string },
             boolean
@@ -85,6 +91,6 @@ export class GlobalDrawerService {
             nzTitle: 'Edit device',
             nzMaskClosable: false,
             nzWidth: DRAWER_WITH,
-        });
+        }));
     }
 }
