@@ -103,6 +103,7 @@ export class GatewayFormComponent implements OnInit {
                 });
             }
         } else {
+            // if form is invalid then show validation errors in the UI
             Object.values(this.form!.controls).forEach((control) => {
                 if (control.invalid) {
                     control.markAsDirty();

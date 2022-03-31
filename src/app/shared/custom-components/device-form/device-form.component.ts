@@ -1,8 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
-import { Observable, Subject, timer } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { from, Observable, Subject, timer } from 'rxjs';
+import {
+    mapTo,
+    mergeAll,
+    shareReplay,
+    switchMap,
+    take,
+    tap,
+} from 'rxjs/operators';
 import { GatewayApiService } from 'src/app/core/api/gateway/gateway-api.service';
 import {
     Device,
@@ -34,7 +41,17 @@ export class DeviceFormComponent implements OnInit {
     private _loadingController: Subject<boolean>;
 
     /** Whether or not the component is performing an API call. */
-    loading$: Observable<boolean>;
+    loading$!: Observable<boolean>;
+
+    private readonly _createDeviceRequest = new Subject<{
+        uid: string;
+        deviceToCreate: DeviceToCreate;
+    }>();
+    private readonly _updateDeviceRequest = new Subject<{
+        uid: string;
+        duid: number;
+        deviceToUpdate: DeviceToUpdate;
+    }>();
 
     /** Possible device statuses. */
     readonly _statusEnum = DeviceStatus;
@@ -46,14 +63,44 @@ export class DeviceFormComponent implements OnInit {
     ) {
         // set up state management for this component
         this._loadingController = new Subject();
-        this.loading$ = this._loadingController.asObservable();
     }
 
     ngOnInit(): void {
+        // create the form
         this.form = this._fb.group({
             vendor: [this.device?.vendor, [Validators.required]],
             status: [this.device?.status, [Validators.required]],
         });
+
+        // emits when a request to create a device is triggered
+        const afterDeviceCreate$ = this._createDeviceRequest.pipe(
+            switchMap(this._createDevice),
+            tap((_) => this._drawerRef.close(true))
+        );
+
+        // emits when a request to update a device is triggered
+        const afterDeviceUpdate$ = this._updateDeviceRequest.pipe(
+            switchMap(this._updateDevice),
+            tap((_) => this._drawerRef.close(true))
+        );
+
+        // indicates that a request to create or update a device has started
+        const loadStart$ = from([
+            this._createDeviceRequest,
+            this._updateDeviceRequest,
+        ]).pipe(mergeAll(), mapTo(true));
+
+        // indicates that a request to create or update a device has ended
+        const loadEnd$ = from([afterDeviceCreate$, afterDeviceUpdate$]).pipe(
+            mergeAll(),
+            mapTo(false)
+        );
+
+        // indicates whether a device is being created / updated
+        this.loading$ = from([loadStart$, loadEnd$]).pipe(
+            mergeAll(),
+            shareReplay(1)
+        );
     }
 
     /** Closes the drawer. */
@@ -65,27 +112,27 @@ export class DeviceFormComponent implements OnInit {
     onSubmit(): void {
         if (this.form!.valid) {
             // submit data
-            this._loadingController.next(true);
 
             // if there is no device then the form was open to create a device
             if (!this.device) {
                 const deviceToCreate: DeviceToCreate = this.form.value;
-                this._gatewayApiService
-                    .postDevice(this.gatewayUid, deviceToCreate)
-                    .pipe(take(1))
-                    .subscribe((_) => this._drawerRef.close(true));
+                // request to create a device
+                this._createDeviceRequest.next({
+                    uid: this.gatewayUid,
+                    deviceToCreate,
+                });
             } else {
+                // else then this form was open to edit a device
                 const deviceToUpdate: DeviceToUpdate = this.form.value;
-                this._gatewayApiService
-                    .putDevice(
-                        this.gatewayUid,
-                        this.device!.uid,
-                        deviceToUpdate
-                    )
-                    .pipe(take(1))
-                    .subscribe((_) => this._drawerRef.close(true));
+                // request to update a device
+                this._updateDeviceRequest.next({
+                    uid: this.gatewayUid,
+                    duid: this.device!.uid,
+                    deviceToUpdate,
+                });
             }
         } else {
+            // if form is invalid then show validation errors in the UI
             Object.values(this.form!.controls).forEach((control) => {
                 if (control.invalid) {
                     control.markAsDirty();
@@ -94,4 +141,22 @@ export class DeviceFormComponent implements OnInit {
             });
         }
     }
+
+    private readonly _createDevice = ({
+        uid,
+        deviceToCreate,
+    }: {
+        uid: string;
+        deviceToCreate: DeviceToCreate;
+    }) => this._gatewayApiService.postDevice(uid, deviceToCreate);
+
+    private readonly _updateDevice = ({
+        uid,
+        duid,
+        deviceToUpdate,
+    }: {
+        uid: string;
+        duid: number;
+        deviceToUpdate: DeviceToUpdate;
+    }) => this._gatewayApiService.putDevice(uid, duid, deviceToUpdate);
 }
