@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { from, Observable, Subject } from 'rxjs';
 import { mapTo, mergeAll, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { GatewayApiService } from 'src/app/core/api/gateway/gateway-api.service';
@@ -39,7 +40,8 @@ export class GatewayFormComponent implements OnInit {
     constructor(
         private _drawerRef: NzDrawerRef<GatewayFormComponent, boolean>,
         private _fb: FormBuilder,
-        private _gatewayApiService: GatewayApiService
+        private _gatewayApiService: GatewayApiService,
+        private _messageService: NzMessageService
     ) {}
 
     ngOnInit(): void {
@@ -52,13 +54,13 @@ export class GatewayFormComponent implements OnInit {
         // emits when a request to create a gateway is triggered
         const afterGatewayCreate$ = this._createGatewayRequest.pipe(
             switchMap(this._createGateway),
-            tap((_) => this._drawerRef.close(true))
+            tap(this._handleSuccessOnCreate)
         );
 
         // emits when a request to update a gateway is triggered
         const afterGatewayUpdate$ = this._updateGatewayRequest.pipe(
             switchMap(this._updateGateway),
-            tap((_) => this._drawerRef.close(true))
+            tap(this._handleSuccessOnUpdate)
         );
 
         // indicates that a request to create or update a gateway has started
@@ -123,4 +125,16 @@ export class GatewayFormComponent implements OnInit {
         uid: string;
         gatewayToUpdate: GatewayToUpdate;
     }) => this._gatewayApiService.put(uid, gatewayToUpdate);
+
+    private readonly _handleSuccessOnCreate = () => {
+        this._messageService.success('Gateway created');
+        this._drawerRef.close(true);
+    };
+
+    private readonly _handleSuccessOnUpdate = () => {
+        {
+            this._messageService.success('Gateway updated');
+            this._drawerRef.close(true);
+        }
+    };
 }

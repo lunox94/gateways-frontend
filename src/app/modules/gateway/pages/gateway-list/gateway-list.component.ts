@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { from, merge, Observable, Subject } from 'rxjs';
 import {
     filter,
@@ -7,6 +8,7 @@ import {
     shareReplay,
     startWith,
     switchMap,
+    tap,
 } from 'rxjs/operators';
 import { GatewayApiService } from 'src/app/core/api/gateway/gateway-api.service';
 import { Gateway } from 'src/app/core/models/models';
@@ -34,7 +36,8 @@ export class GatewayListComponent implements OnInit {
 
     constructor(
         private _globalDrawerService: GlobalDrawerService,
-        private _gatewayApiService: GatewayApiService
+        private _gatewayApiService: GatewayApiService,
+        private _messageService: NzMessageService
     ) {}
 
     ngOnInit(): void {
@@ -48,6 +51,7 @@ export class GatewayListComponent implements OnInit {
         // Emits when a gateway was deleted.
         const afterGatewayDelete$ = this._deleteGatewayRequest.pipe(
             switchMap(this._deleteGateway),
+            tap(this._handleSuccessOnDelete),
             mapTo(true)
         );
 
@@ -98,4 +102,8 @@ export class GatewayListComponent implements OnInit {
 
     private readonly _deleteGateway = ({ uid }: Gateway) =>
         this._gatewayApiService.delete(uid);
+
+    private readonly _handleSuccessOnDelete = () => {
+        this._messageService.success('Gateway deleted');
+    };
 }

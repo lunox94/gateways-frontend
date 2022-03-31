@@ -72,13 +72,13 @@ export class DeviceFormComponent implements OnInit {
         // emits when a request to create a device is triggered
         const afterDeviceCreate$ = this._createDeviceRequest.pipe(
             switchMap(this._createDevice),
-            tap((_) => this._drawerRef.close(true))
+            tap(this._handleSuccessOnCreate)
         );
 
         // emits when a request to update a device is triggered
         const afterDeviceUpdate$ = this._updateDeviceRequest.pipe(
             switchMap(this._updateDevice),
-            tap((_) => this._drawerRef.close(true))
+            tap(this._handleSuccessOnUpdate)
         );
 
         // indicates that a request to create or update a device has started
@@ -165,11 +165,23 @@ export class DeviceFormComponent implements OnInit {
      */
     private readonly _handleError = (error: AppError): Observable<string> => {
         if (error instanceof BadRequestError) {
-            this._messageService.create('error', error.message);
+            this._messageService.error(error.message);
         }
 
         this._drawerRef.close();
 
         return of(error.message);
+    };
+
+    private readonly _handleSuccessOnCreate = () => {
+        this._messageService.success('Device created');
+        this._drawerRef.close(true);
+    };
+
+    private readonly _handleSuccessOnUpdate = () => {
+        {
+            this._messageService.success('Device updated');
+            this._drawerRef.close(true);
+        }
     };
 }

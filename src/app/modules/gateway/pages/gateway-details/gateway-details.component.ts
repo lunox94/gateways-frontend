@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { from, merge, Observable, of, Subject } from 'rxjs';
 import {
     filter,
@@ -48,7 +49,8 @@ export class GatewayDetailsComponent implements OnInit {
         private _globalDrawerService: GlobalDrawerService,
         private _router: Router,
         private _activatedRoute: ActivatedRoute,
-        private _gatewayApiService: GatewayApiService
+        private _gatewayApiService: GatewayApiService,
+        private _messageService: NzMessageService
     ) {}
 
     ngOnInit(): void {
@@ -77,7 +79,7 @@ export class GatewayDetailsComponent implements OnInit {
         );
 
         // From this an observable will be created that emits
-        // whenever is needed to re-fetch the gateway.
+        // whenever the gateway is edited.
         const reloadGateway$ = afterEditClose$.pipe(
             filter<boolean>(Boolean),
             shareReplay(1)
@@ -118,7 +120,7 @@ export class GatewayDetailsComponent implements OnInit {
 
         // Indicates that a request to delete the current gateway has ended.
         const deleteEnds$ = afterGatewayDelete$.pipe(
-            tap((_) => this._router.navigate(['gateways'])),
+            tap(this._handleSuccessOnDeleteGateway),
             mapTo(false)
         );
 
@@ -153,6 +155,7 @@ export class GatewayDetailsComponent implements OnInit {
         const afterDeviceDelete$ = this._deleteDeviceRequest.pipe(
             withLatestFrom(this.gateway$),
             switchMap(this._deleteDevice),
+            tap(this._handleSuccessOnDeleteDevice),
             mapTo(true)
         );
 
@@ -258,4 +261,13 @@ export class GatewayDetailsComponent implements OnInit {
 
     private readonly _deleteDevice = ([device, gateway]: [Device, Gateway]) =>
         this._gatewayApiService.deleteDevice(gateway.uid, device.uid);
+
+    private readonly _handleSuccessOnDeleteGateway = () => {
+        this._messageService.success('Gateway deleted');
+        this._router.navigate(['gateways']);
+    };
+
+    private readonly _handleSuccessOnDeleteDevice = () => {
+        this._messageService.success('Device deleted');
+    };
 }
