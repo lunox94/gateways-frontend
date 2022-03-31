@@ -1,22 +1,24 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
-import { from, Observable, Subject, timer } from 'rxjs';
+import { from, Observable, of, Subject, timer } from 'rxjs';
 import {
+    catchError,
     mapTo,
     mergeAll,
     shareReplay,
     switchMap,
-    take,
     tap,
 } from 'rxjs/operators';
 import { GatewayApiService } from 'src/app/core/api/gateway/gateway-api.service';
+import { AppError, BadRequestError } from 'src/app/core/errors/app-errors';
 import {
     Device,
     DeviceStatus,
     DeviceToCreate,
     DeviceToUpdate,
 } from 'src/app/core/models/models';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
     selector: 'app-device-form',
@@ -37,9 +39,6 @@ export class DeviceFormComponent implements OnInit {
     /** Form with the fields to create or edit a device. */
     form!: FormGroup;
 
-    /** Controller to emit the loading state values. */
-    private _loadingController: Subject<boolean>;
-
     /** Whether or not the component is performing an API call. */
     loading$!: Observable<boolean>;
 
@@ -59,11 +58,9 @@ export class DeviceFormComponent implements OnInit {
     constructor(
         private _drawerRef: NzDrawerRef<DeviceFormComponent>,
         private _fb: FormBuilder,
-        private _gatewayApiService: GatewayApiService
-    ) {
-        // set up state management for this component
-        this._loadingController = new Subject();
-    }
+        private _gatewayApiService: GatewayApiService,
+        private _messageService: NzMessageService
+    ) {}
 
     ngOnInit(): void {
         // create the form
@@ -93,6 +90,7 @@ export class DeviceFormComponent implements OnInit {
         // indicates that a request to create or update a device has ended
         const loadEnd$ = from([afterDeviceCreate$, afterDeviceUpdate$]).pipe(
             mergeAll(),
+            catchError(this._handleError),
             mapTo(false)
         );
 
@@ -159,4 +157,19 @@ export class DeviceFormComponent implements OnInit {
         duid: number;
         deviceToUpdate: DeviceToUpdate;
     }) => this._gatewayApiService.putDevice(uid, duid, deviceToUpdate);
+
+    /**
+     * Very basic error handling. Just taking into account BadRequest
+     * to guard against maximum number of devices is reached.
+     * @param error Error to handle.
+     */
+    private readonly _handleError = (error: AppError): Observable<string> => {
+        if (error instanceof BadRequestError) {
+            this._messageService.create('error', error.message);
+        }
+
+        this._drawerRef.close();
+
+        return of(error.message);
+    };
 }

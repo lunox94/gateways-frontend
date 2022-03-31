@@ -13,6 +13,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxMaskModule } from 'ngx-mask';
 import { GlobalErrorHandlingInterceptor } from './core/interceptors/global-error-handling.interceptor';
 import { GlobalDrawerModule } from './core/services/global-drawer.module';
+import { NzMessageServiceModule } from 'ng-zorro-antd/message';
 
 registerLocaleData(en);
 
@@ -26,6 +27,7 @@ registerLocaleData(en);
         HttpClientModule,
         BrowserAnimationsModule,
         GlobalDrawerModule,
+        NzMessageServiceModule,
 
         // 3rd party modules that require global forRoot initialization
         NgxMaskModule.forRoot(),
