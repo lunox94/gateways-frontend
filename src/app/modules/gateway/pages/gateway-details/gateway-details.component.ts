@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { from, merge, Observable, Subject } from 'rxjs';
+import { from, merge, Observable, of, Subject } from 'rxjs';
 import {
     filter,
     map,
@@ -10,6 +10,7 @@ import {
     startWith,
     switchMap,
     switchMapTo,
+    take,
     tap,
     withLatestFrom,
 } from 'rxjs/operators';
@@ -64,17 +65,14 @@ export class GatewayDetailsComponent implements OnInit {
         );
 
         // Gets the gateway after an uid from the route arrives.
-        const gatewayLoad$ = this.gatewayUid$.pipe(
-            switchMap(this._getGateway),
-            shareReplay(1)
-        );
+        const gatewayLoad$ = this.gatewayUid$.pipe(switchMap(this._getGateway));
 
         // Open a drawer with the edit gateway form every time it is requested.
         // When the form is closed it will return a boolean that indicates whether
         // or not the gateway was updated.
         const afterEditClose$ = this._editGatewayRequest.pipe(
-            withLatestFrom(gatewayLoad$),
-            map(([_, gateway]) => gateway),
+            switchMap(() => this.gateway$?.pipe(take(1) ?? of(null))),
+            filter((gateway) => gateway !== null),
             switchMap(this._openEditGatewayForm)
         );
 
@@ -104,7 +102,7 @@ export class GatewayDetailsComponent implements OnInit {
         // the gateway every time a request arrive. Emits when the gateway
         // was deleted.
         const afterGatewayDelete$ = this._deleteGatewayRequest.pipe(
-            withLatestFrom(gatewayLoad$),
+            withLatestFrom(this.gateway$),
             map(([_, gateway]) => gateway),
             switchMap(this._deleteGateway)
         );
