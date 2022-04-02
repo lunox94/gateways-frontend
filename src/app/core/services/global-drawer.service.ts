@@ -4,7 +4,7 @@ import { DeviceFormComponent } from 'src/app/shared/custom-components/device-for
 import { GatewayFormComponent } from 'src/app/shared/custom-components/gateway-form/gateway-form.component';
 import { Device, Gateway } from '../models/models';
 
-const DRAWER_WITH = 520;
+const NZ_WRAP_CLASS_NAME = 'global-drawer';
 
 @Injectable()
 export class GlobalDrawerService {
@@ -22,7 +22,7 @@ export class GlobalDrawerService {
             nzContent: GatewayFormComponent,
             nzTitle: 'Create gateway',
             nzMaskClosable: false,
-            nzWidth: DRAWER_WITH,
+            nzWrapClassName: NZ_WRAP_CLASS_NAME,
         }));
     }
 
@@ -44,7 +44,7 @@ export class GlobalDrawerService {
             nzContentParams: { gateway },
             nzTitle: 'Edit gateway',
             nzMaskClosable: false,
-            nzWidth: DRAWER_WITH,
+            nzWrapClassName: NZ_WRAP_CLASS_NAME,
         }));
     }
 
@@ -66,7 +66,7 @@ export class GlobalDrawerService {
             nzContentParams: { gatewayUid: gateway.uid },
             nzTitle: 'Create device',
             nzMaskClosable: false,
-            nzWidth: DRAWER_WITH,
+            nzWrapClassName: NZ_WRAP_CLASS_NAME,
         }));
     }
 
@@ -90,7 +90,7 @@ export class GlobalDrawerService {
             nzContentParams: { device, gatewayUid: gateway.uid },
             nzTitle: 'Edit device',
             nzMaskClosable: false,
-            nzWidth: DRAWER_WITH,
+            nzWrapClassName: NZ_WRAP_CLASS_NAME,
         }));
     }
 }

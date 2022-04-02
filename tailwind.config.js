@@ -4,7 +4,11 @@ module.exports = {
   ],
   important: true,
   theme: {
-    extend: {},
+    extend: {
+      width: {
+        '520': '520px',
+      }
+    },
   },
   plugins: [],
 }

@@ -1,11 +1,17 @@
-<nz-table #table [nzData]="gatewayList" [nzLoading]="loading">
+<nz-table
+    #table
+    [nzData]="gatewayList"
+    [nzLoading]="loading"
+    [nzScroll]="{ x: '700px' }"
+    [nzPageSize]="5"
+>
     <thead>
         <tr>
             <th nzWidth="60px"></th>
             <th>Name</th>
             <th>IPv4</th>
             <th>Devices</th>
-            <th>Actions</th>
+            <th nzWidth="130px" nzRight>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -23,7 +29,7 @@
                         [devices]="data.devices"
                     ></app-devices-status-cell>
                 </td>
-                <td>
+                <td nzRight>
                     <a
                         nz-popconfirm
                         nzPopconfirmTitle="Are you sure to delete this gateway?"

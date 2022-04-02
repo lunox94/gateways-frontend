@@ -10,3 +10,8 @@
 .ant-result-icon svg {
     display: inline;
 }
+
+.global-drawer {
+    @apply w-72 md:w-520 !important
+    /* width: 380px !important; */
+}

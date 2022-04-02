@@ -6,6 +6,7 @@
     [nzBordered]="bordered"
     [nzTitle]="hasTitle ? 'Devices' : null"
     [nzLoading]="loading"
+    [nzScroll]="{ x: showActions ? '700px' : '570px' }"
 >
     <thead>
         <tr>
@@ -13,7 +14,7 @@
             <th>Vendor</th>
             <th>Created At</th>
             <th>Status</th>
-            <th *ngIf="showActions">Actions</th>
+            <th *ngIf="showActions" nzWidth="130px" nzRight>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -33,7 +34,7 @@
                     "
                 ></nz-badge>
             </td>
-            <td *ngIf="showActions">
+            <td *ngIf="showActions" nzRight>
                 <a
                     nz-popconfirm
                     nzPopconfirmTitle="Are you sure to delete this device?"
