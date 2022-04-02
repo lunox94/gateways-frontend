@@ -8,9 +8,15 @@
     <thead>
         <tr>
             <th nzWidth="60px"></th>
-            <th>Name</th>
-            <th>IPv4</th>
-            <th>Devices</th>
+            <th [nzSortFn]="defaultSortFactory('name')">Name</th>
+            <th [nzSortFn]="defaultSortFactory('ipv4')">IPv4</th>
+            <th
+                [nzSortFn]="deviceSortFn"
+                [nzFilters]="listOfDeviceFilters"
+                [nzFilterFn]="deviceFilterFn"
+            >
+                Devices
+            </th>
             <th nzWidth="130px" nzRight>Actions</th>
         </tr>
     </thead>

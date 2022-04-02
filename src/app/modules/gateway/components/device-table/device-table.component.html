@@ -11,9 +11,9 @@
     <thead>
         <tr>
             <th>UID</th>
-            <th>Vendor</th>
-            <th>Created At</th>
-            <th>Status</th>
+            <th [nzSortFn]="vendorSortFn">Vendor</th>
+            <th [nzSortFn]="createdAtSortFn">Created At</th>
+            <th [nzSortFn]="statusSortFn">Status</th>
             <th *ngIf="showActions" nzWidth="130px" nzRight>Actions</th>
         </tr>
     </thead>
@@ -21,7 +21,9 @@
         <tr *ngFor="let data of table.data">
             <td>{{ data.uid }}</td>
             <td>{{ data.vendor }}</td>
-            <td>{{ data.createdAt | date }}</td>
+            <td>
+                {{ data.createdAt | date: "short" }}
+            </td>
             <td>
                 <nz-badge
                     [nzStatus]="

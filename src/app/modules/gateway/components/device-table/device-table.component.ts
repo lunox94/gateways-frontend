@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { NzTableSortFn } from 'ng-zorro-antd/table';
 import { Device, DeviceStatus } from 'src/app/core/models/models';
 
 @Component({
@@ -29,6 +30,24 @@ export class DeviceTableComponent implements OnInit {
 
     /** Possible device statuses. */
     readonly _statusEnum = DeviceStatus;
+
+    /** Function to sort by vendor in NzTable */
+    readonly vendorSortFn: NzTableSortFn<Device> = (
+        a: Device,
+        b: Device
+    ): number => a.vendor.localeCompare(b.vendor);
+
+    /** Function to sort by status in NzTable */
+    readonly statusSortFn: NzTableSortFn<Device> = (
+        a: Device,
+        b: Device
+    ): number => a.status - b.status;
+
+    /** Function to sort by createdAt in NzTable */
+    readonly createdAtSortFn: NzTableSortFn<Device> = (
+        a: Device,
+        b: Device
+    ): number => (a.createdAt < b.createdAt ? -1 : 1);
 
     constructor() {}
 
